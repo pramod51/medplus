@@ -122,7 +122,12 @@ class ReportTile extends StatelessWidget {
     return [
       GestureDetector(
         // onTap: () => ,
-        child: SvgPicture.asset(Assets.ic_doc),
+        child: SvgPicture.asset(
+          Assets.ic_doc,
+          color: Palette.buttonColor,
+          height: 24,
+          width: 24,
+        ),
       ),
       const SizedBox(width: 15),
       GestureDetector(

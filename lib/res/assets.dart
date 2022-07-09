@@ -35,6 +35,8 @@ class Assets {
   static const String img_otp_bg = '$_rootIconsPath/img_otp_bg.png';
   static const String ic_ellips = '$_rootSvgPath/ic_ellips.svg';
   static const String ic_stethoscope = '$_rootSvgPath/ic_stethoscope.svg';
+  static const String ic_search_32 = '$_rootSvgPath/ic_search_32.svg';
+  static const String ic_home = '$_rootSvgPath/ic_home.svg';
   // static const String ic_tick = '$_rootSvgPath/ic_tick.svg';
 
 }

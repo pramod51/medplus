@@ -1,10 +1,9 @@
 import 'package:medplus/ui/base/app_page_controller.dart';
 
-class HomePageController extends AppPageController {
+class UploadReportPageController extends AppPageController {
   @override
   void onReady() {
     super.onReady();
-    print('Home onReady called');
     selectedBottomNav.value = BottomNavItems.home;
   }
 }

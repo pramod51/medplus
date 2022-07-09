@@ -16,16 +16,6 @@ class UploadReport extends AppPage {
   }
 
   @override
-  Widget? get profilePlaceHolder => GestureDetector(
-        onTap: () {
-          Get.back();
-        },
-        child: SvgPicture.asset(
-          Assets.ic_arrow_right,
-        ),
-      );
-
-  @override
   Widget get body => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 
 class AppNetworkImage extends StatelessWidget {
@@ -12,6 +10,7 @@ class AppNetworkImage extends StatelessWidget {
     this.width,
     this.alignment = Alignment.center,
     this.placeholderBgColor,
+    this.initChar = '',
   }) : super(key: key);
 
   final String url;
@@ -20,6 +19,7 @@ class AppNetworkImage extends StatelessWidget {
   final double? width;
   final Alignment alignment;
   final Color? placeholderBgColor;
+  final String initChar;
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +42,21 @@ class AppNetworkImage extends StatelessWidget {
 
   Widget get error {
     return Container(
-      alignment: Alignment.center,
-      width: width,
       height: height,
-      color: Palette.darkBg.withOpacity(0.5),
-      child: SvgPicture.asset(Assets.ic_loading_img),
+      width: width,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(24),
+        color: Palette.primaryColor,
+      ),
+      child: Text(
+        initChar,
+        style: const TextStyle(
+          fontSize: 26,
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
     );
   }
 }

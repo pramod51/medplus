@@ -6,8 +6,6 @@ import 'app_translations.dart';
 import 'routes/routes.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
   runApp(const MyApp());
 }
 

@@ -66,6 +66,7 @@ class ReportFilter extends StatelessWidget {
       hint: 'Search',
       prefixIcon: SvgPicture.asset(Assets.ic_search),
       controller: TextEditingController(),
+      fillColor: Palette.lightBlueBg,
     );
   }
 
@@ -76,7 +77,7 @@ class ReportFilter extends StatelessWidget {
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          color: Palette.primaryColor,
+          color: Palette.textColor,
         ),
       ),
       const SizedBox(height: 13),
@@ -109,7 +110,7 @@ class ReportFilter extends StatelessWidget {
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          color: Palette.primaryColor,
+          color: Palette.textColor,
         ),
       ),
       const SizedBox(height: 23),

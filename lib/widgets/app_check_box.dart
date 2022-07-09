@@ -62,7 +62,7 @@ class _AppCheckBoxState extends State<AppCheckBox> {
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: Palette.textLight,
+                        color: Palette.textColor,
                       ),
                     ),
               ),

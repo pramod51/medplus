@@ -25,6 +25,7 @@ class InputFormField extends StatelessWidget {
   final Color? outlineColor;
   final Color? textColor;
   final double fontSize;
+  final Color? fillColor;
 
   const InputFormField({
     Key? key,
@@ -50,66 +51,75 @@ class InputFormField extends StatelessWidget {
     this.outlineColor,
     this.textColor,
     this.fontSize = 14,
+    this.fillColor = Colors.transparent,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      style: TextStyle(
-        fontSize: fontSize,
-        color: textColor ?? Palette.textLight,
+    return Container(
+      decoration: BoxDecoration(
+        color: fillColor,
+        borderRadius: BorderRadius.circular(4),
       ),
-      textAlign: textAlign,
-      enabled: enabled,
-      // cursorHeight: 18,
-      //cursorWidth: 0.7,
-      cursorColor: Palette.darkBg,
-      validator: validator,
-      controller: controller,
-      onChanged: onChange,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      autofillHints: autofillHints,
-      autofocus: autofocus,
-      focusNode: focusNode,
-      enableSuggestions: enableSuggestions,
-      autocorrect: false,
-      enableInteractiveSelection: enableInteractiveSelection,
-      decoration: (decoration ?? const InputDecoration()).copyWith(
-        hintStyle: TextStyle(
-          fontSize: 13,
+      child: TextFormField(
+        style: TextStyle(
+          fontSize: fontSize,
           color: textColor ?? Palette.textLight,
+          fontWeight: FontWeight.w500,
         ),
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: outlineColor ?? Palette.darkBg,
+        textAlign: textAlign,
+        enabled: enabled,
+        // cursorHeight: 18,
+        //cursorWidth: 0.7,
+        cursorColor: Palette.darkBg,
+        validator: validator,
+        controller: controller,
+        onChanged: onChange,
+        obscureText: obscureText,
+        keyboardType: keyboardType,
+        autofillHints: autofillHints,
+        autofocus: autofocus,
+        focusNode: focusNode,
+        enableSuggestions: enableSuggestions,
+        autocorrect: false,
+        enableInteractiveSelection: enableInteractiveSelection,
+        decoration: (decoration ?? const InputDecoration()).copyWith(
+          hintStyle: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: textColor ?? Palette.textLight,
           ),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: outlineColor ?? Palette.darkBg,
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: outlineColor ?? Palette.darkBg,
+            ),
+            borderRadius: BorderRadius.circular(5),
           ),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: outlineColor ?? Palette.darkBg,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: outlineColor ?? Palette.darkBg,
+            ),
+            borderRadius: BorderRadius.circular(5),
           ),
-          borderRadius: BorderRadius.circular(5),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: outlineColor ?? Palette.darkBg,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          isDense: true,
+          contentPadding:
+              contentPadding ?? const EdgeInsets.fromLTRB(13, 18, 13, 18),
+          hintText: hint,
+          prefixIcon: prefixIcon,
+          suffixIcon: suffixIcon,
+          prefixIconConstraints: const BoxConstraints(
+            minWidth: 46,
+            minHeight: 20,
+          ),
         ),
-        isDense: true,
-        contentPadding:
-            contentPadding ?? const EdgeInsets.fromLTRB(13, 18, 13, 18),
-        hintText: hint,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 46,
-          minHeight: 20,
-        ),
+        inputFormatters: inputFormatters,
       ),
-      inputFormatters: inputFormatters,
     );
   }
 }

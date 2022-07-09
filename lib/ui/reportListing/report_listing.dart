@@ -5,11 +5,14 @@ import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/reportListing/report_filter.dart';
+import 'package:medplus/ui/reportListing/report_listing_page_controller.dart';
 import 'package:medplus/widgets/report_tile.dart';
 
 class ReportListing extends AppPage {
   ReportListing({Key? key}) : super(key: key);
   static const routeName = "/report_listing";
+  final controller = Get.find<ReportListingPageController>();
+
   static void start() {
     Get.toNamed(routeName);
   }
@@ -21,31 +24,36 @@ class ReportListing extends AppPage {
           children: [
             const SizedBox(height: 25),
             buildAllNames(),
-            const SizedBox(height: 22),
+            const SizedBox(height: 30),
             buildAllReportListHeader,
             const SizedBox(height: 22),
             buildReportList(),
+            const SizedBox(height: 16),
           ],
         ),
       );
 
   Widget buildAllNames() {
     return SizedBox(
-      height: 62,
+      height: 76,
       child: ListView.separated(
+        physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemBuilder: (_, index) => Container(
-          height: 62,
-          width: 62,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
+          height: 76,
+          width: 73,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
             color: Palette.primaryColor,
           ),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           alignment: Alignment.center,
           child: const Text(
             'Jane',
+            maxLines: 1,
             style: TextStyle(
               fontSize: 15,
+              overflow: TextOverflow.clip,
               fontWeight: FontWeight.w500,
               color: Palette.lightBgColor,
             ),
@@ -65,16 +73,13 @@ class ReportListing extends AppPage {
           style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
-            color: Palette.primaryColor,
+            color: Palette.textColor,
           ),
         ),
         const Spacer(),
         GestureDetector(
           onTap: openDrawer,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SvgPicture.asset(Assets.ic_filter),
-          ),
+          child: SvgPicture.asset(Assets.ic_filter),
         ),
       ],
     );
@@ -82,6 +87,7 @@ class ReportListing extends AppPage {
 
   Widget buildReportList() {
     return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: 5,
       shrinkWrap: true,
       itemBuilder: (_, index) => const ReportTile(),

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
+import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/input_form_field.dart';
 
 class AddMemberDilog extends StatelessWidget {
@@ -8,8 +12,12 @@ class AddMemberDilog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
+        buildCloseButton,
         Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Text(
               'Add Family Member',
@@ -25,7 +33,7 @@ class AddMemberDilog extends StatelessWidget {
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
-                color: Palette.secondaryColor,
+                color: Palette.textColor,
               ),
             ),
             const SizedBox(height: 23),
@@ -39,13 +47,55 @@ class AddMemberDilog extends StatelessWidget {
               hint: 'Relation*',
             ),
             const SizedBox(height: 25),
+            buildRadioBtn,
+            const SizedBox(height: 28),
+            buildActionButton,
+            const SizedBox(height: 40),
           ],
-        )
+        ),
       ],
     );
   }
 
+  Widget get buildCloseButton => Row(
+        children: [
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: IconButton(
+              onPressed: (() => Get.back()),
+              icon: SvgPicture.asset(Assets.ic_close),
+              splashRadius: 24,
+            ),
+          ),
+        ],
+      );
+
   Widget get buildRadioBtn {
     return Row();
+  }
+
+  Widget get buildActionButton {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Padding(
+          padding: EdgeInsets.all(10),
+          child: Text(
+            'Cancel',
+            style: TextStyle(
+              fontSize: 14,
+              color: Palette.textColor,
+            ),
+          ),
+        ),
+        const SizedBox(width: 25),
+        AppElevatedBtn(
+          onPressed: () {},
+          text: '+ Add Member',
+          textColor: Colors.white,
+        ),
+      ],
+    );
   }
 }

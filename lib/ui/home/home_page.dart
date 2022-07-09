@@ -4,13 +4,16 @@ import 'package:get/get.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/ui/base/app_page.dart';
+import 'package:medplus/ui/home/home_page_controller.dart';
 import 'package:medplus/ui/uploadReport/upload_report.dart';
 import 'package:medplus/widgets/app_button.dart';
+import 'package:medplus/widgets/app_network_image.dart';
 import 'package:medplus/widgets/app_tab_bar.dart';
 import 'package:medplus/widgets/report_tile.dart';
 
 class HomePage extends AppPage {
   static const routeName = "/home";
+  final controller = Get.find<HomePageController>();
   static void start() {
     Get.toNamed(routeName);
   }
@@ -22,7 +25,7 @@ class HomePage extends AppPage {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           const SizedBox(height: 7),
-          buildTabBar,
+          buildTabsRow,
           const SizedBox(height: 13),
           buildGrid(),
           const SizedBox(height: 32),
@@ -33,6 +36,68 @@ class HomePage extends AppPage {
         ],
       );
 
+  @override
+  List<Widget> get leadingAppBar => [
+        buildProfileImage,
+        const SizedBox(width: 12),
+        Expanded(child: buildName),
+      ];
+
+  Widget get buildName {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: const [
+        Text(
+          'Welcome back',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Palette.secondaryColor,
+          ),
+        ),
+        Text(
+          'Jane Cooper',
+          style: TextStyle(
+            fontSize: 20,
+            height: 25 / 20,
+            fontWeight: FontWeight.w700,
+            color: Palette.textColor,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget get buildProfileImage {
+    return const AppNetworkImage(
+      width: 48,
+      height: 48,
+      initChar: 'J',
+      url: 'url',
+    );
+  }
+
+  Widget get buildTabsRow {
+    return Row(
+      children: [
+        Expanded(child: buildTabBar),
+        const SizedBox(width: 24),
+        GestureDetector(
+          onTap: () => controller.onAddMemberClicked(),
+          child: const Text(
+            '+ Add Member',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Palette.textColor,
+            ),
+          ),
+        ),
+        const SizedBox(width: 24),
+      ],
+    );
+  }
+
   Widget get buildTabBar {
     return AppTabBarPlain(
       height: 33,
@@ -42,9 +107,6 @@ class HomePage extends AppPage {
         ),
         Tab(
           text: 'Jane Cooper',
-        ),
-        Tab(
-          text: 'Test',
         ),
       ],
       onTabClicked: (int tab) {},
@@ -81,7 +143,10 @@ class HomePage extends AppPage {
                     color: Colors.white,
                   ),
                   alignment: Alignment.center,
-                  child: SvgPicture.asset(Assets.ic_stethoscope),
+                  child: SvgPicture.asset(
+                    Assets.ic_stethoscope,
+                    color: Palette.col7166F9,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 const Text(

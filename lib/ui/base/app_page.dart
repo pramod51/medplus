@@ -11,22 +11,101 @@ class AppPage extends StatelessWidget {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return WillPopScope(
+      onWillPop: () async {
+        _controller.selectedBottomNav.value = BottomNavItems.home;
+        return true;
+      },
       child: Scaffold(
         key: _scaffoldKey,
         drawer: drawer,
         endDrawer: endDrawer,
+        bottomNavigationBar: bottomNavigationBar,
         backgroundColor: Palette.lightBlueBg,
         body: scaffoldBody,
       ),
     );
   }
 
+  Widget get bottomNavigationBar {
+    return Theme(
+      data: Get.theme.copyWith(
+        hoverColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+      ),
+      child: Container(
+        height: 94,
+        alignment: Alignment.center,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(30),
+            topRight: Radius.circular(30),
+          ),
+        ),
+        child: Obx(
+          () => BottomNavigationBar(
+            elevation: 0,
+            iconSize: 32,
+            onTap: _controller.onTap,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            items: [
+              bottomNavigationBarItem(
+                assetsPath: Assets.ic_home,
+                isSelected:
+                    _controller.selectedBottomNav.value == BottomNavItems.home,
+              ),
+              bottomNavigationBarItem(
+                assetsPath: Assets.ic_search_32,
+                isSelected: _controller.selectedBottomNav.value ==
+                    BottomNavItems.search,
+              ),
+              bottomNavigationBarItem(
+                assetsPath: Assets.ic_doc,
+                isSelected: _controller.selectedBottomNav.value ==
+                    BottomNavItems.reports,
+              ),
+              bottomNavigationBarItem(
+                assetsPath: Assets.ic_my_account,
+                isSelected: _controller.selectedBottomNav.value ==
+                    BottomNavItems.myAccount,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  BottomNavigationBarItem bottomNavigationBarItem({
+    required String assetsPath,
+    bool isSelected = false,
+  }) {
+    return BottomNavigationBarItem(
+      label: '',
+      backgroundColor: Colors.transparent,
+      icon: Container(
+        height: 60,
+        width: 60,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+            color: isSelected ? Palette.primaryColor : Colors.white,
+            shape: BoxShape.circle),
+        child: SvgPicture.asset(
+          assetsPath,
+          color: isSelected ? Colors.white : Palette.textColor,
+        ),
+      ),
+    );
+  }
+
   Widget get scaffoldBody => Column(
         children: [
-          const SizedBox(height: 30),
+          const SizedBox(height: 70),
           appBar,
-          SizedBox(height: profilePlaceHolder == null ? 30 : 0),
+          SizedBox(height: leadingAppBar.isNotEmpty ? 30 : 20),
           Expanded(
             child: ScrollConfiguration(
               behavior: ScrollConfiguration.of(Get.context!)
@@ -47,15 +126,11 @@ class AppPage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Row(
           children: [
-            if (profilePlaceHolder == null) ...[
-              buildProfileImage,
-              const SizedBox(width: 12),
-              Expanded(
-                child: buildName,
-              ),
-            ] else ...[
-              profilePlaceHolder ?? const SizedBox.shrink(),
+            if (leadingAppBar.isEmpty) ...[
+              buildBackButton,
               const Spacer(),
+            ] else ...[
+              ...leadingAppBar,
             ],
             GestureDetector(
               onTap: () => openEndDrawer(),
@@ -65,41 +140,15 @@ class AppPage extends StatelessWidget {
         ),
       );
 
-  Widget get buildName {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text(
-          'Welcome back',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Palette.secondaryColor,
-          ),
-        ),
-        Text(
-          'Jane Cooper',
-          style: TextStyle(
-            fontSize: 20,
-            height: 25 / 20,
-            fontWeight: FontWeight.w700,
-            color: Palette.textColor,
-          ),
-        ),
-      ],
-    );
-  }
+  List<Widget> get leadingAppBar => [];
 
-  Widget get buildProfileImage {
-    return SizedBox(
-      height: 48,
-      width: 48,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: const CircleAvatar(),
-      ),
-    );
-  }
+  Widget get buildBackButton => IconButton(
+        onPressed: () => _controller.onBackButtonClicked(),
+        icon: SvgPicture.asset(
+          Assets.ic_arrow_right,
+        ),
+        splashRadius: 20,
+      );
 
   Widget? get drawer => null;
 
@@ -113,12 +162,18 @@ class AppPage extends StatelessWidget {
               assets: Assets.ic_my_account,
               name: 'My Account',
               ontap: _controller.onMyAccountClicked,
+              color: Palette.textColor,
+              width: 24,
+              height: 24,
             ),
             buildDivider,
             buildDrawarItem(
               assets: Assets.ic_doc,
               name: 'All Reports',
               ontap: _controller.onAllReportsClicked,
+              color: Palette.textColor,
+              width: 24,
+              height: 24,
             ),
             buildDivider,
             buildDrawarItem(
@@ -163,11 +218,12 @@ class AppPage extends StatelessWidget {
   Widget get buildCloseButton => Row(
         children: [
           const Spacer(),
-          GestureDetector(
-            onTap: closeEndDrawer,
-            child: Padding(
-              padding: const EdgeInsets.all(24),
-              child: SvgPicture.asset(Assets.ic_close),
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: IconButton(
+              onPressed: closeEndDrawer,
+              icon: SvgPicture.asset(Assets.ic_close),
+              splashRadius: 24,
             ),
           ),
         ],
@@ -177,6 +233,9 @@ class AppPage extends StatelessWidget {
     required String assets,
     required String name,
     required VoidCallback ontap,
+    Color? color,
+    double? width,
+    double? height,
   }) {
     return GestureDetector(
       onTap: () {
@@ -188,7 +247,12 @@ class AppPage extends StatelessWidget {
         child: Row(
           children: [
             const SizedBox(width: 14),
-            SvgPicture.asset(assets),
+            SvgPicture.asset(
+              assets,
+              color: color,
+              width: width,
+              height: height,
+            ),
             const SizedBox(width: 11),
             Expanded(
               child: Text(
@@ -223,6 +287,4 @@ class AppPage extends StatelessWidget {
   void closeEndDrawer() {
     _scaffoldKey.currentState?.closeEndDrawer();
   }
-
-  Widget? get profilePlaceHolder => null;
 }
