@@ -15,43 +15,46 @@ class AddMemberDilog extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         buildCloseButton,
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Add Family Member',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-                color: Palette.textColor,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Add Family Member',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: Palette.textColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              'Amet minim mollit non deserunt ullamco ',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: Palette.textColor,
+              const SizedBox(height: 6),
+              const Text(
+                'Amet minim mollit non deserunt ullamco ',
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: Palette.textColor,
+                ),
               ),
-            ),
-            const SizedBox(height: 23),
-            InputFormField(
-              controller: TextEditingController(),
-              hint: 'Name*',
-            ),
-            const SizedBox(height: 18),
-            InputFormField(
-              controller: TextEditingController(),
-              hint: 'Relation*',
-            ),
-            const SizedBox(height: 25),
-            buildRadioBtn,
-            const SizedBox(height: 28),
-            buildActionButton,
-            const SizedBox(height: 40),
-          ],
+              const SizedBox(height: 23),
+              InputFormField(
+                controller: TextEditingController(),
+                hint: 'Name*',
+              ),
+              const SizedBox(height: 18),
+              InputFormField(
+                controller: TextEditingController(),
+                hint: 'Relation*',
+              ),
+              const SizedBox(height: 25),
+              buildRadioBtn,
+              const SizedBox(height: 28),
+              buildActionButton,
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ],
     );
@@ -61,13 +64,14 @@ class AddMemberDilog extends StatelessWidget {
         children: [
           const Spacer(),
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(vertical: 4),
             child: IconButton(
               onPressed: (() => Get.back()),
               icon: SvgPicture.asset(Assets.ic_close),
-              splashRadius: 24,
+              splashRadius: 20,
             ),
           ),
+          const SizedBox(width: 4),
         ],
       );
 
@@ -79,13 +83,15 @@ class AddMemberDilog extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Padding(
-          padding: EdgeInsets.all(10),
-          child: Text(
-            'Cancel',
-            style: TextStyle(
-              fontSize: 14,
-              color: Palette.textColor,
+        const Expanded(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 14,
+                color: Palette.textColor,
+              ),
             ),
           ),
         ),

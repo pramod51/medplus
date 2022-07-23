@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medplus/data/preferences/app_preferences.dart';
+import 'package:medplus/services/api_response.dart';
+import 'package:medplus/ui/authentication/login/login_page.dart';
 import 'package:medplus/ui/base/add_member_dilog.dart';
 import 'package:medplus/ui/home/home_page.dart';
 import 'package:medplus/ui/myAccount/my_account_page.dart';
@@ -24,13 +27,15 @@ class AppPageController extends GetxController {
 
   void onMyAccountClicked() {}
 
-  void onAllReportsClicked() {}
+  void onAllReportsClicked() {
+    onTap(2);
+  }
 
   void onAddMemberClicked() {
     showDialog(
       context: Get.context!,
       builder: (_) => const AlertDialog(
-        contentPadding: EdgeInsets.symmetric(horizontal: 24),
+        contentPadding: EdgeInsets.zero,
         content: SizedBox(
           width: double.maxFinite,
           child: AddMemberDilog(),
@@ -39,13 +44,18 @@ class AppPageController extends GetxController {
     );
   }
 
-  void onMyMemberClicked() {}
+  void onMyMemberClicked() {
+    onTap(3);
+  }
 
   void onLanguageClicked() {}
 
   void onRefAFrdClicked() {}
 
-  void onSignOutClicked() {}
+  void onSignOutClicked() async {
+    await Get.find<AppPreferences>().clearAll();
+    LoginPage.start();
+  }
 
   void onTap(int index) {
     final prevNav = selectedBottomNav.value;
@@ -107,4 +117,41 @@ class AppPageController extends GetxController {
       HomePage.routeName,
     );
   }
+
+  void showProgress([Widget? child]) {
+    showDialog(
+      context: Get.context!,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+        content: Container(
+          color: Colors.transparent,
+          height: 100,
+          width: 100,
+          alignment: Alignment.center,
+          child: child ??
+              const CircularProgressIndicator(
+                color: Colors.white,
+              ),
+        ),
+      ),
+    );
+  }
+
+  void hideProgress() {
+    Get.back();
+  }
+}
+
+Tupal<ApiStatus, String> get emptyTuple => Tupal(ApiStatus.EMPTY, "");
+Tupal<ApiStatus, String> get loadingTuple => Tupal(ApiStatus.LOADING, "");
+Tupal<ApiStatus, String> get successTuple => Tupal(ApiStatus.SUCCESS, "");
+Tupal<ApiStatus, String> get errorTuple =>
+    Tupal(ApiStatus.SERVER_ERROR, "Something went wrong, try again");
+
+class Tupal<T, V> {
+  T item1;
+  V item2;
+
+  Tupal(this.item1, this.item2);
 }

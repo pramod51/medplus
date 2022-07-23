@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
-import 'package:medplus/ui/authentication/otp/otp_page.dart';
+import 'package:medplus/ui/authentication/login/login_page_controller.dart';
 import 'package:medplus/ui/base/simple_scaffold.dart';
 import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/input_form_field.dart';
@@ -12,11 +12,11 @@ import 'package:medplus/widgets/input_form_field.dart';
 class LoginPage extends SimpleScaffold {
   static const routeName = "/login";
   static void start() {
-    Get.offAndToNamed(routeName);
+    Get.offAllNamed(routeName);
   }
 
-  const LoginPage({Key? key}) : super(key: key);
-
+  LoginPage({Key? key}) : super(key: key);
+  final controller = Get.find<LoginPageController>();
   @override
   Widget get buildBody {
     return Column(
@@ -53,7 +53,7 @@ class LoginPage extends SimpleScaffold {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 27),
           child: InputFormField(
-            controller: TextEditingController(),
+            controller: controller.phoneTextEditingController,
             hint: 'Mobile Number',
             fontSize: 13,
             keyboardType: TextInputType.number,
@@ -68,9 +68,7 @@ class LoginPage extends SimpleScaffold {
         ),
         const SizedBox(height: 24),
         AppElevatedBtn(
-          onPressed: () {
-            OtpPage.start();
-          },
+          onPressed: controller.onLoginClicked,
           width: 189,
           borderRadius: 245,
           text: 'Request OTP',

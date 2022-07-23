@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
+import 'package:medplus/ui/authentication/otp/otp_page_controller.dart';
 import 'package:medplus/ui/base/simple_scaffold.dart';
-import 'package:medplus/ui/home/home_page.dart';
 import 'package:medplus/widgets/app_button.dart';
-import 'package:medplus/widgets/input_form_field.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpPage extends SimpleScaffold {
-  const OtpPage({Key? key}) : super(key: key);
+  OtpPage({Key? key}) : super(key: key);
   static const routeName = "/otp";
-  static void start() {
-    Get.toNamed(routeName);
+  static void start(String otp) {
+    Get.toNamed(
+      routeName,
+      arguments: otp,
+    );
   }
+
+  final controller = Get.find<OtpPageController>();
 
   @override
   Widget get buildBody {
@@ -83,50 +87,47 @@ class OtpPage extends SimpleScaffold {
   }
 
   Widget get buildOtpDesc {
-    return const Text(
-      'Enter 4 digit verification code sent to your number',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 20,
-        height: 3 / 2,
-        color: Colors.white,
-        letterSpacing: 0.2,
-        fontWeight: FontWeight.w500,
+    return const Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      child: Text(
+        'Enter 4 digit verification code sent to your number',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20,
+          height: 3 / 2,
+          color: Colors.white,
+          letterSpacing: 0.2,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
 
   Widget get buildOtpView {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (int i = 0; i < 6; i++)
-          Container(
-            height: 40,
-            width: 40,
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            child: InputFormField(
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              controller: TextEditingController(),
-              textAlign: TextAlign.center,
-              fontSize: 13,
-              keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(RegExp('[0-9]')),
-              ],
-              textColor: Colors.white.withOpacity(0.7),
-              outlineColor: Colors.white.withOpacity(0.7),
-            ),
-          )
-      ],
+    return SizedBox(
+      width: 220,
+      height: 40,
+      child: PinFieldAutoFill(
+        onCodeSubmitted: controller.onCodeSubmitted,
+        controller: controller.pinFieldAutoFillController,
+        codeLength: 4,
+        decoration: BoxLooseDecoration(
+          strokeColorBuilder: const FixedColorBuilder(Colors.white),
+          textStyle: TextStyle(
+            fontSize: 13,
+            fontFamily: 'Montserrat',
+            color: Colors.white.withOpacity(0.7),
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
     );
   }
 
   Widget get buildSubmitBtn {
     return AppElevatedBtn(
       width: 150,
-      onPressed: () => HomePage.start(),
+      onPressed: controller.onSubmitClicked,
       borderRadius: 245,
       text: 'Submit',
       color: Palette.lightBgColor,

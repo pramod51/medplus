@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
+import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/search/serach_page_controller.dart';
 import 'package:medplus/widgets/input_form_field.dart';
@@ -10,27 +12,34 @@ import 'package:medplus/widgets/report_tile.dart';
 import 'package:medplus/widgets/simple_chip.dart';
 
 class SearchPage extends AppPage {
-  final controller = Get.find<SearchPageController>();
+  final controller = Get.put(SearchPageController());
 
   static const routeName = "/search";
   SearchPage({Key? key}) : super(key: key);
 
   @override
   Widget get body {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            buildSearchBox,
-            const SizedBox(height: 18),
-            ...buildSuggestions(),
-            const SizedBox(height: 19),
-            ...buildAllResults(),
-          ],
-        ),
-      ),
+    return Obx(
+      () {
+        if (controller.apiTupal.value.item1 == ApiStatus.SUCCESS) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  buildSearchBox,
+                  const SizedBox(height: 18),
+                  ...buildSuggestions(),
+                  const SizedBox(height: 19),
+                  ...buildAllResults(),
+                ],
+              ),
+            ),
+          );
+        }
+        return loadingScreen;
+      },
     );
   }
 
@@ -68,6 +77,8 @@ class SearchPage extends AppPage {
   }
 
   List<Widget> buildSuggestions() {
+    final list = SharedConfig.subCategory ?? <String>[];
+    if (list.isEmpty) return [const SizedBox.shrink()];
     return [
       const Text(
         'Suggestions',
@@ -83,8 +94,11 @@ class SearchPage extends AppPage {
         spacing: 10,
         runSpacing: 10,
         children: [
-          for (int i = 0; i < 10; i++) ...[
-            const SimpleChip(text: 'text'),
+          for (int i = 0; i < list.length; i++) ...[
+            SimpleChip(
+              text: list[i],
+              onClick: (bool val) {},
+            ),
           ]
         ],
       ),
@@ -107,16 +121,22 @@ class SearchPage extends AppPage {
         color: Palette.darkBg,
       ),
       const SizedBox(height: 19),
-      SizedBox(
-        width: double.maxFinite,
-        child: ListView.separated(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemBuilder: (_, index) {
-            return const ReportTile();
-          },
-          separatorBuilder: (_, __) => const SizedBox(height: 16),
-          itemCount: 10,
+      Obx(
+        () => SizedBox(
+          width: double.maxFinite,
+          child: ListView.separated(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (_, index) {
+              final data = controller.data[index];
+              return ReportTile(
+                data: data,
+                userName: controller.familyNameMap[data.id] ?? '',
+              );
+            },
+            separatorBuilder: (_, __) => const SizedBox(height: 16),
+            itemCount: controller.data.length,
+          ),
         ),
       ),
     ];

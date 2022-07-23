@@ -3,51 +3,65 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
+import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/home/home_page_controller.dart';
-import 'package:medplus/ui/uploadReport/upload_report.dart';
-import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/app_network_image.dart';
 import 'package:medplus/widgets/app_tab_bar.dart';
 import 'package:medplus/widgets/report_tile.dart';
 
 class HomePage extends AppPage {
   static const routeName = "/home";
-  final controller = Get.find<HomePageController>();
+  final controller = Get.put(HomePageController());
   static void start() {
-    Get.toNamed(routeName);
+    Get.offAllNamed(routeName);
   }
 
   HomePage({Key? key}) : super(key: key);
 
   @override
-  Widget get body => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 7),
-          buildTabsRow,
-          const SizedBox(height: 13),
-          buildGrid(),
-          const SizedBox(height: 32),
-          buildAddRecButton,
-          const SizedBox(height: 56),
-          buildYourReport(),
-          const SizedBox(height: 26),
-        ],
-      );
+  Widget get body {
+    return Obx(() {
+      if (controller.apiTupal.value.item1 == ApiStatus.SUCCESS) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 7),
+            buildTabsRow,
+            const SizedBox(height: 13),
+            buildGrid(),
+            const SizedBox(height: 56),
+            buildYourReport(),
+            const SizedBox(height: 26),
+          ],
+        );
+      }
+      return loadingScreen;
+    });
+  }
 
   @override
-  List<Widget> get leadingAppBar => [
-        buildProfileImage,
-        const SizedBox(width: 12),
-        Expanded(child: buildName),
-      ];
+  List<Widget> get leadingAppBar {
+    return [
+      Obx(() {
+        return controller.apiTupal.value.item1 == ApiStatus.SUCCESS
+            ? buildProfileImage
+            : const Spacer();
+      }),
+      const SizedBox(width: 12),
+      Obx(() {
+        return controller.apiTupal.value.item1 == ApiStatus.SUCCESS
+            ? Expanded(child: buildName)
+            : const SizedBox.shrink();
+      }),
+    ];
+  }
 
   Widget get buildName {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: const [
-        Text(
+      children: [
+        const Text(
           'Welcome back',
           style: TextStyle(
             fontSize: 14,
@@ -56,8 +70,8 @@ class HomePage extends AppPage {
           ),
         ),
         Text(
-          'Jane Cooper',
-          style: TextStyle(
+          controller.homePageData!.user.name,
+          style: const TextStyle(
             fontSize: 20,
             height: 25 / 20,
             fontWeight: FontWeight.w700,
@@ -69,17 +83,26 @@ class HomePage extends AppPage {
   }
 
   Widget get buildProfileImage {
-    return const AppNetworkImage(
+    return AppNetworkImage(
       width: 48,
       height: 48,
-      initChar: 'J',
-      url: 'url',
+      initChar: initChar(controller.homePageData!.user.name),
+      url: controller.homePageData!.user.photoBaseUrl +
+          controller.homePageData!.user.profilePhotoUrl,
     );
+  }
+
+  String initChar(String? val) {
+    if (val == null || val.isEmpty) {
+      return '';
+    }
+    return val[0];
   }
 
   Widget get buildTabsRow {
     return Row(
       children: [
+        const SizedBox(width: 24),
         Expanded(child: buildTabBar),
         const SizedBox(width: 24),
         GestureDetector(
@@ -99,25 +122,36 @@ class HomePage extends AppPage {
   }
 
   Widget get buildTabBar {
+    if (controller.homePageData == null) {
+      return const SizedBox(
+        height: 50,
+      );
+    }
+    final list = controller.homePageData!.familyNames;
+
     return AppTabBarPlain(
       height: 33,
-      tabs: const [
+      tabs: [
         Tab(
-          text: 'Jane Cooper',
+          child: Text(controller.homePageData!.user.name),
         ),
-        Tab(
-          text: 'Jane Cooper',
-        ),
+        for (String name in list) ...[
+          Tab(
+            child: Text(name),
+          ),
+        ]
       ],
-      onTabClicked: (int tab) {},
+      onTabClicked: (int index) => controller.onTabClicked(list[index]),
     );
   }
 
   Widget buildGrid() {
+    final data = controller.homePageData!.category;
+
     return pad(
       child: GridView.builder(
         physics: const NeverScrollableScrollPhysics(),
-        itemCount: 4,
+        itemCount: controller.homePageData!.category.length,
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisSpacing: 24,
@@ -126,55 +160,48 @@ class HomePage extends AppPage {
           mainAxisSpacing: 24,
         ),
         itemBuilder: (_, index) {
-          return Container(
-            height: 124,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(18),
-              color: Palette.col7166F9,
-            ),
-            child: Column(
-              children: [
-                const SizedBox(height: 16),
-                Container(
-                  height: 55,
-                  width: 55,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Colors.white,
+          return GestureDetector(
+            onTap: () => controller
+                .onCategoryClicked(controller.homePageData!.category[index]),
+            child: Container(
+              height: 124,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                color: Palette.col7166F9,
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 16),
+                  Container(
+                    height: 55,
+                    width: 55,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Colors.white,
+                    ),
+                    alignment: Alignment.center,
+                    child: SvgPicture.asset(
+                      Assets.ic_stethoscope,
+                      color: Palette.col7166F9,
+                    ),
                   ),
-                  alignment: Alignment.center,
-                  child: SvgPicture.asset(
-                    Assets.ic_stethoscope,
-                    color: Palette.col7166F9,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Pathology',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                  ),
-                )
-              ],
+                  const SizedBox(height: 10),
+                  Text(
+                    data[index].name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
             ),
           );
         },
       ),
     );
   }
-
-  Widget get buildAddRecButton => Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          AppElevatedBtn(
-            onPressed: () => UploadReport.start(),
-            text: '+ Add Record',
-            textColor: Colors.white,
-          ),
-        ],
-      );
 
   Widget buildYourReport() {
     return pad(
@@ -192,10 +219,12 @@ class HomePage extends AppPage {
           const SizedBox(height: 8),
           ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: 5,
+            itemCount: controller.homePageData!.yourReport.length,
             shrinkWrap: true,
             itemBuilder: (_, index) {
-              return const ReportTile();
+              return ReportTile(
+                  userName: controller.homePageData!.user.name,
+                  data: controller.homePageData!.yourReport[index]);
             },
             separatorBuilder: (_, __) => const SizedBox(
               height: 10,

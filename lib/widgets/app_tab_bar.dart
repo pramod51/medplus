@@ -69,8 +69,8 @@ class _AppTabBarPlainState extends State<AppTabBarPlain>
         labelColor: Palette.jacarta,
         tabs: widget.tabs,
         onTap: widget.onTabClicked,
-        labelPadding: const EdgeInsets.symmetric(horizontal: 32),
-        indicatorPadding: const EdgeInsets.symmetric(horizontal: 28),
+        // labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+        // indicatorPadding: const EdgeInsets.only(right: 8),
         isScrollable: widget.isScrollable,
       ),
     );

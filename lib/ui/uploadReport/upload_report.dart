@@ -4,16 +4,22 @@ import 'package:get/get.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/ui/base/app_page.dart';
-import 'package:medplus/ui/reportListing/report_listing.dart';
+import 'package:medplus/ui/uploadReport/upload_report_page_controller.dart';
 import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/simple_chip.dart';
 
 class UploadReport extends AppPage {
   UploadReport({Key? key}) : super(key: key);
+
   static const routeName = "/upload_report";
-  static void start() {
-    Get.toNamed(routeName);
+  static void start(dynamic arguments) {
+    Get.toNamed(
+      routeName,
+      arguments: arguments,
+    );
   }
+
+  final controller = Get.put(UploadReportPageController());
 
   @override
   Widget get body => Padding(
@@ -35,13 +41,14 @@ class UploadReport extends AppPage {
       );
 
   Widget buildSuggestions() {
+    final list = controller.category.subCategory.split(',');
     return wrapContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Pathology Suggestions',
-            style: TextStyle(
+          Text(
+            '${controller.category.name} Suggestions',
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
               color: Palette.textColor,
@@ -52,8 +59,18 @@ class UploadReport extends AppPage {
             spacing: 13,
             runSpacing: 11,
             children: [
-              for (int i = 0; i < 16; i++) ...[
-                const SimpleChip(text: 'text'),
+              for (int i = 0; i < list.length; i++) ...[
+                SimpleChip(
+                  text: list[i],
+                  onClick: (bool val) {
+                    if (val) {
+                      controller.subCategory.add(list[i]);
+                    } else {
+                      controller.subCategory
+                          .removeWhere((element) => element == list[i]);
+                    }
+                  },
+                ),
               ]
             ],
           )
@@ -98,10 +115,10 @@ class UploadReport extends AppPage {
   List<Widget> buildRecodForAndDesc() {
     return [
       Row(
-        children: const [
+        children: [
           Text(
-            'Upload record for ',
-            style: TextStyle(
+            'Upload record for ${controller.familayName}',
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               color: Palette.textLight,
@@ -109,10 +126,10 @@ class UploadReport extends AppPage {
           ),
           Expanded(
             child: Text(
-              'Jane Cooper',
+              controller.familayName,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Palette.primaryColor,
@@ -138,7 +155,7 @@ class UploadReport extends AppPage {
       children: [
         Expanded(
           child: GestureDetector(
-            // onTap: () => ,
+            onTap: controller.takePicture,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -167,7 +184,7 @@ class UploadReport extends AppPage {
         const SizedBox(width: 8),
         Expanded(
           child: GestureDetector(
-            // onTap: () => ,
+            onTap: controller.pickDocument,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -202,16 +219,20 @@ class UploadReport extends AppPage {
           ),
         ),
         const SizedBox(width: 11),
-        const Text(
-          '08/30/2022',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Palette.textColor,
+        Obx(
+          () => Text(
+            controller.reportDate.value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Palette.textColor,
+            ),
           ),
         ),
         const SizedBox(width: 7),
-        SvgPicture.asset(Assets.ic_calendar),
+        GestureDetector(
+            onTap: controller.pickReportDate,
+            child: SvgPicture.asset(Assets.ic_calendar)),
         const SizedBox(width: 20),
         SvgPicture.asset(Assets.ic_info),
       ],
@@ -233,16 +254,20 @@ class UploadReport extends AppPage {
           ),
         ),
         const SizedBox(width: 14),
-        const Text(
-          '08/30/2022',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Palette.textColor,
+        Obx(
+          () => Text(
+            controller.reminderDate.value,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Palette.textColor,
+            ),
           ),
         ),
         const SizedBox(width: 7),
-        SvgPicture.asset(Assets.ic_calendar),
+        GestureDetector(
+            onTap: controller.pickReminderDate,
+            child: SvgPicture.asset(Assets.ic_calendar)),
         const SizedBox(width: 8),
       ],
     );
@@ -255,7 +280,7 @@ class UploadReport extends AppPage {
         AppElevatedBtn(
           width: 140,
           text: 'Finish',
-          onPressed: () => ReportListing.start(),
+          onPressed: controller.uploadReport,
         ),
       ],
     );

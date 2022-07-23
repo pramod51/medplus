@@ -4,17 +4,13 @@ import 'package:medplus/ui/authentication/login/login_page_controller.dart';
 import 'package:medplus/ui/authentication/otp/otp_page.dart';
 import 'package:medplus/ui/authentication/otp/otp_page_controller.dart';
 import 'package:medplus/ui/home/home_page.dart';
-import 'package:medplus/ui/home/home_page_controller.dart';
 import 'package:medplus/ui/myAccount/my_account_page.dart';
 import 'package:medplus/ui/myAccount/my_account_page_controller.dart';
 import 'package:medplus/ui/reportListing/report_listing.dart';
-import 'package:medplus/ui/reportListing/report_listing_page_controller.dart';
 import 'package:medplus/ui/search/search_page.dart';
-import 'package:medplus/ui/search/serach_page_controller.dart';
 import 'package:medplus/ui/splash/splash_controller.dart';
 import 'package:medplus/ui/splash/splash_page.dart';
 import 'package:medplus/ui/uploadReport/upload_report.dart';
-import 'package:medplus/ui/uploadReport/upload_report_page_controller.dart';
 
 class Routes {
   Routes._();
@@ -32,7 +28,7 @@ class Routes {
       ),
       GetPage(
         name: LoginPage.routeName,
-        page: () => const LoginPage(),
+        page: () => LoginPage(),
         binding: BindingsBuilder(
           () {
             Get.create(() => LoginPageController());
@@ -44,14 +40,14 @@ class Routes {
         page: () => HomePage(),
         binding: BindingsBuilder(
           () {
-            Get.create(() => HomePageController());
+            // Get.create(() => HomePageController());
           },
         ),
         transition: Transition.noTransition,
       ),
       GetPage(
         name: OtpPage.routeName,
-        page: () => const OtpPage(),
+        page: () => OtpPage(),
         binding: BindingsBuilder(
           () {
             Get.create(() => OtpPageController());
@@ -63,7 +59,7 @@ class Routes {
         page: () => ReportListing(),
         binding: BindingsBuilder(
           () {
-            Get.create(() => ReportListingPageController());
+            // Get.create(() => ReportListingPageController());
           },
         ),
         transition: Transition.noTransition,
@@ -73,7 +69,7 @@ class Routes {
         page: () => UploadReport(),
         binding: BindingsBuilder(
           () {
-            Get.create(() => UploadReportPageController());
+            // Get.create(() => UploadReportPageController());
           },
         ),
       ),
@@ -82,7 +78,7 @@ class Routes {
         page: () => SearchPage(),
         binding: BindingsBuilder(
           () {
-            Get.create(() => SearchPageController());
+            // Get.create(() => SearchPageController());
           },
         ),
         transition: Transition.noTransition,

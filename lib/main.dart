@@ -3,9 +3,12 @@ import 'package:get/get.dart';
 import 'package:medplus/res/palette.dart';
 
 import 'app_translations.dart';
+import 'initial_bindings.dart';
 import 'routes/routes.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await InitialBindings().dependencies();
   runApp(const MyApp());
 }
 

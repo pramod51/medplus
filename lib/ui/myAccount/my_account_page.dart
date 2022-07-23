@@ -9,7 +9,7 @@ import 'package:medplus/widgets/app_button.dart';
 
 class MyAccountPage extends AppPage {
   static const routeName = "/myAccount";
-  final controller = Get.find<MyAccountPageController>();
+  final controller = Get.put(MyAccountPageController());
 
   MyAccountPage({Key? key}) : super(key: key);
 

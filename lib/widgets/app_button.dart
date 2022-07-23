@@ -27,6 +27,7 @@ class AppElevatedBtn extends StatefulWidget {
   final TextStyle? textStyle;
   final double borderRadius;
   final Color color;
+  final EdgeInsets? padding;
 
   final Color textColor;
 
@@ -41,6 +42,7 @@ class AppElevatedBtn extends StatefulWidget {
     this.borderRadius = 245,
     this.color = Palette.buttonColor,
     this.textColor = Colors.white,
+    this.padding,
     Key? key,
   }) : super(key: key);
 
@@ -94,7 +96,7 @@ class AppElevatedBtnState extends State<AppElevatedBtn> {
 
   Widget get text {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 4),
       child: Text(
         widget.text,
         style: widget.textStyle ??
@@ -187,7 +189,7 @@ class AppOutlinedBtnState extends State<AppOutlinedBtn> {
 
   Widget get text {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Text(
         widget.text,
         style: widget.textStyle ??

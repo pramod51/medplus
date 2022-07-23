@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -12,18 +13,29 @@ class AppPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        _controller.selectedBottomNav.value = BottomNavItems.home;
-        return true;
-      },
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: drawer,
-        endDrawer: endDrawer,
-        bottomNavigationBar: bottomNavigationBar,
-        backgroundColor: Palette.lightBlueBg,
-        body: scaffoldBody,
-      ),
+        onWillPop: () async {
+          _controller.selectedBottomNav.value = BottomNavItems.home;
+          return true;
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          drawer: drawer,
+          endDrawer: endDrawer,
+          bottomNavigationBar: bottomNavigationBar,
+          backgroundColor: Palette.lightBlueBg,
+          body: scaffoldBody,
+        ));
+  }
+
+  Widget get loadingScreen {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: const [
+        SizedBox(
+          height: 150,
+        ),
+        CircularProgressIndicator.adaptive(),
+      ],
     );
   }
 
@@ -35,7 +47,7 @@ class AppPage extends StatelessWidget {
         shadowColor: Colors.transparent,
       ),
       child: Container(
-        height: 94,
+        height: Platform.isIOS ? 125 : 95,
         alignment: Alignment.center,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -47,7 +59,7 @@ class AppPage extends StatelessWidget {
         child: Obx(
           () => BottomNavigationBar(
             elevation: 0,
-            iconSize: 32,
+            iconSize: 30,
             onTap: _controller.onTap,
             showSelectedLabels: false,
             showUnselectedLabels: false,
@@ -84,7 +96,7 @@ class AppPage extends StatelessWidget {
     bool isSelected = false,
   }) {
     return BottomNavigationBarItem(
-      label: '',
+      label: 'kkg',
       backgroundColor: Colors.transparent,
       icon: Container(
         height: 60,
@@ -101,41 +113,45 @@ class AppPage extends StatelessWidget {
     );
   }
 
-  Widget get scaffoldBody => Column(
-        children: [
-          const SizedBox(height: 70),
-          appBar,
-          SizedBox(height: leadingAppBar.isNotEmpty ? 30 : 20),
-          Expanded(
-            child: ScrollConfiguration(
-              behavior: ScrollConfiguration.of(Get.context!)
-                  .copyWith(scrollbars: false),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: body,
-              ),
+  Widget get scaffoldBody {
+    return Column(
+      children: [
+        const SizedBox(height: 70),
+        appBar,
+        SizedBox(height: leadingAppBar.isNotEmpty ? 30 : 20),
+        Expanded(
+          child: ScrollConfiguration(
+            behavior: ScrollConfiguration.of(Get.context!)
+                .copyWith(scrollbars: false),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: body,
             ),
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
 
   Widget get body => Container();
 
-  Widget get appBar => Container(
+  Widget get appBar => SizedBox(
         height: 48,
-        padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Row(
           children: [
             if (leadingAppBar.isEmpty) ...[
+              const SizedBox(width: 12),
               buildBackButton,
               const Spacer(),
             ] else ...[
+              const SizedBox(width: 24),
               ...leadingAppBar,
             ],
             GestureDetector(
               onTap: () => openEndDrawer(),
               child: SvgPicture.asset(Assets.ic_burger_menu),
             ),
+            const SizedBox(width: 24),
           ],
         ),
       );

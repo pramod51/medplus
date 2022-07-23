@@ -6,12 +6,11 @@ import 'package:medplus/res/palette.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/reportListing/report_filter.dart';
 import 'package:medplus/ui/reportListing/report_listing_page_controller.dart';
-import 'package:medplus/widgets/report_tile.dart';
 
 class ReportListing extends AppPage {
   ReportListing({Key? key}) : super(key: key);
   static const routeName = "/report_listing";
-  final controller = Get.find<ReportListingPageController>();
+  final controller = Get.put(ReportListingPageController);
 
   static void start() {
     Get.toNamed(routeName);
@@ -90,7 +89,7 @@ class ReportListing extends AppPage {
       physics: const NeverScrollableScrollPhysics(),
       itemCount: 5,
       shrinkWrap: true,
-      itemBuilder: (_, index) => const ReportTile(),
+      itemBuilder: (_, index) => const SizedBox(), //ReportTile(),
       separatorBuilder: (_, __) => const SizedBox(height: 16),
     );
   }
