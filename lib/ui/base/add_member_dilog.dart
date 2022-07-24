@@ -134,10 +134,10 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: () => Get.back(),
-          child: const Expanded(
-            child: Padding(
+        Expanded(
+          child: GestureDetector(
+            onTap: () => Get.back(),
+            child: const Padding(
               padding: EdgeInsets.all(10),
               child: Text(
                 'Cancel',

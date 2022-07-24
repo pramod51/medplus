@@ -29,9 +29,9 @@ class ReportListingPageController extends GetxController {
     final apiResponse = await service.fetchFamily();
     if (apiResponse.success) {
       final responseData = FamilyResponse.fromMap(apiResponse.data);
-
       familyList.assignAll(responseData.data);
       if (familyList.isEmpty) {
+        apiTupal.value = successTuple;
         return;
       }
       familyList[0].isSelected = true;

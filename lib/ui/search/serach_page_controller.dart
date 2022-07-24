@@ -48,6 +48,8 @@ class SearchPageController extends GetxController {
     ]);
     if (response.first && response.last) {
       apiTupal.value = successTuple;
+    } else {
+      apiTupal.value = errorTuple;
     }
   }
 
@@ -56,9 +58,7 @@ class SearchPageController extends GetxController {
         await service.searchReport(textEditingController.text, calcelToken);
     if (apiResponse.success) {
       final responseData = SearchReportResponse.fromMap(apiResponse.data);
-      if (responseData.data.isEmpty) {
-        return false;
-      }
+
       data.assignAll(responseData.data);
       debugPrint('Serach Success${responseData.msg}');
 
@@ -71,8 +71,8 @@ class SearchPageController extends GetxController {
     final apiResponse = await service.fetchFamily();
     if (apiResponse.success) {
       final responseData = FamilyResponse.fromMap(apiResponse.data);
-      if (responseData.data.isEmpty) {
-        return false;
+      for (FamilyData f in responseData.data) {
+        familyNameMap[f.id!] = f.name;
       }
       debugPrint('Family data Success${responseData.msg}');
       return true;

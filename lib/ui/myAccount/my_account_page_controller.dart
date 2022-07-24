@@ -29,9 +29,7 @@ class MyAccountPageController extends AppPageController {
     final apiResponse = await service.fetchFamily();
     if (apiResponse.success) {
       final responseData = FamilyResponse.fromMap(apiResponse.data);
-      if (responseData.data.isEmpty) {
-        return;
-      }
+
       familyList.assignAll(responseData.data);
       apiTupal.value = successTuple;
       debugPrint('Family data Success${responseData.msg}');
