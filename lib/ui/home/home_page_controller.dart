@@ -34,6 +34,7 @@ class HomePageController extends AppPageController {
     if (apiResponse.success) {
       final responseData = HomePageResponse.fromMap(apiResponse.data);
       if (responseData.data == null) {
+        apiTupal.value = errorTuple;
         return;
       }
       homePageData = responseData.data!;
@@ -41,7 +42,9 @@ class HomePageController extends AppPageController {
       debugPrint('Homepage Success${responseData.msg}');
       apiTupal.value = successTuple;
       saveSubCategory();
-    } else {}
+    } else {
+      apiTupal.value = errorTuple;
+    }
   }
 
   void onCategoryClicked(Category category) async {

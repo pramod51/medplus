@@ -6,6 +6,7 @@ import 'package:medplus/res/palette.dart';
 import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/reportListing/report_filter.dart';
+import 'package:medplus/widgets/api_response_widget.dart';
 import 'package:medplus/widgets/report_tile.dart';
 
 import 'report_listing_page_controller.dart';
@@ -37,6 +38,10 @@ class ReportListing extends AppPage {
                 const SizedBox(height: 16),
               ],
             ),
+          );
+        } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+          return ErrorScreen(
+            onTryAgain: controller.fetchFamilyReport,
           );
         }
         return loadingScreen;
@@ -108,6 +113,15 @@ class ReportListing extends AppPage {
 
   Widget buildReportList() {
     if (controller.reportApiTupal.value.item1 == ApiStatus.SUCCESS) {
+      if (controller.familyList.isEmpty) {
+        return const SizedBox(
+          height: 100,
+          child: NoDataScreen(
+            message: 'No Report found',
+          ),
+        );
+      }
+
       return ListView.separated(
         physics: const NeverScrollableScrollPhysics(),
         itemCount: controller.data.length,
@@ -117,6 +131,10 @@ class ReportListing extends AppPage {
           data: controller.data[index],
         ),
         separatorBuilder: (_, __) => const SizedBox(height: 16),
+      );
+    } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+      return ErrorScreen(
+        onTryAgain: controller.fetchFamilyReport,
       );
     }
 

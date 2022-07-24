@@ -7,6 +7,7 @@ import 'package:medplus/res/palette.dart';
 import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/search/serach_page_controller.dart';
+import 'package:medplus/widgets/api_response_widget.dart';
 import 'package:medplus/widgets/input_form_field.dart';
 import 'package:medplus/widgets/report_tile.dart';
 import 'package:medplus/widgets/simple_chip.dart';
@@ -36,6 +37,10 @@ class SearchPage extends AppPage {
                 ],
               ),
             ),
+          );
+        } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+          return ErrorScreen(
+            onTryAgain: controller.search,
           );
         }
         return loadingScreen;
@@ -121,24 +126,33 @@ class SearchPage extends AppPage {
         color: Palette.darkBg,
       ),
       const SizedBox(height: 19),
-      Obx(
-        () => SizedBox(
-          width: double.maxFinite,
-          child: ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (_, index) {
-              final data = controller.data[index];
-              return ReportTile(
-                data: data,
-                userName: controller.familyNameMap[data.id] ?? '',
-              );
-            },
-            separatorBuilder: (_, __) => const SizedBox(height: 16),
-            itemCount: controller.data.length,
+      if (controller.data.isEmpty) ...[
+        const SizedBox(
+          height: 100,
+          child: NoDataScreen(
+            message: 'No result found',
           ),
         ),
-      ),
+      ] else ...[
+        Obx(
+          () => SizedBox(
+            width: double.maxFinite,
+            child: ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemBuilder: (_, index) {
+                final data = controller.data[index];
+                return ReportTile(
+                  data: data,
+                  userName: controller.familyNameMap[data.id] ?? '',
+                );
+              },
+              separatorBuilder: (_, __) => const SizedBox(height: 16),
+              itemCount: controller.data.length,
+            ),
+          ),
+        ),
+      ]
     ];
   }
 }

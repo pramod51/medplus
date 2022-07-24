@@ -7,6 +7,7 @@ import 'package:medplus/res/palette.dart';
 import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/myAccount/my_account_page_controller.dart';
+import 'package:medplus/widgets/api_response_widget.dart';
 import 'package:medplus/widgets/app_button.dart';
 
 class MyAccountPage extends AppPage {
@@ -59,6 +60,10 @@ class MyAccountPage extends AppPage {
               ],
             ),
           );
+        } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+          return ErrorScreen(
+            onTryAgain: controller.fetchFamily,
+          );
         }
         return loadingScreen;
       },
@@ -66,6 +71,14 @@ class MyAccountPage extends AppPage {
   }
 
   Widget buildMemberList() {
+    if (controller.familyList.isEmpty) {
+      const SizedBox(
+        height: 100,
+        child: NoDataScreen(
+          message: 'No Member found',
+        ),
+      );
+    }
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       itemCount: controller.familyList.length,

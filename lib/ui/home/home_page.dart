@@ -7,6 +7,7 @@ import 'package:medplus/res/palette.dart';
 import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/home/home_page_controller.dart';
+import 'package:medplus/widgets/api_response_widget.dart';
 import 'package:medplus/widgets/app_network_image.dart';
 import 'package:medplus/widgets/app_tab_bar.dart';
 import 'package:medplus/widgets/report_tile.dart';
@@ -35,6 +36,10 @@ class HomePage extends AppPage {
             buildYourReport(),
             const SizedBox(height: 26),
           ],
+        );
+      } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+        return ErrorScreen(
+          onTryAgain: controller.fetchData,
         );
       }
       return loadingScreen;
@@ -228,19 +233,28 @@ class HomePage extends AppPage {
             ),
           ),
           const SizedBox(height: 8),
-          ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: controller.homePageData!.yourReport.length,
-            shrinkWrap: true,
-            itemBuilder: (_, index) {
-              return ReportTile(
-                  userName: controller.homePageData!.user.name,
-                  data: controller.homePageData!.yourReport[index]);
-            },
-            separatorBuilder: (_, __) => const SizedBox(
-              height: 10,
+          if (controller.homePageData!.yourReport.isEmpty) ...[
+            const SizedBox(
+              height: 100,
+              child: NoDataScreen(
+                message: 'No report found',
+              ),
             ),
-          )
+          ] else ...[
+            ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: controller.homePageData!.yourReport.length,
+              shrinkWrap: true,
+              itemBuilder: (_, index) {
+                return ReportTile(
+                    userName: controller.homePageData!.user.name,
+                    data: controller.homePageData!.yourReport[index]);
+              },
+              separatorBuilder: (_, __) => const SizedBox(
+                height: 10,
+              ),
+            )
+          ]
         ],
       ),
     );
