@@ -39,6 +39,7 @@ class ApiService {
 
   Future<ApiResponse> uploadReport(
       {required MultipartFile data,
+      int? familyId,
       required int categoryId,
       required String subCategory,
       required String reportDate,
@@ -46,6 +47,7 @@ class ApiService {
       required Function(int) onUploadProgress}) {
     FormData formData = FormData.fromMap(makePalyload({
       "user_id": SharedConfig.userId,
+      "family_id": familyId,
       'category_id': categoryId,
       'sub_category_key': subCategory,
       'report_date': AppUtils.getFormattedDate(reportDate),
@@ -54,7 +56,7 @@ class ApiService {
     }));
     print(formData.fields);
     return client.upload(
-      '$baseUrl/api/v1/add_my_documents',
+      '$baseUrl/api/v1/add_my_family_documents',
       formData,
       onUploadProgress,
     );
@@ -102,6 +104,32 @@ class ApiService {
       '$baseUrl/api/v1/get_family',
       makePalyload({
         "user_id": SharedConfig.userId,
+      }),
+    );
+  }
+
+  Future<ApiResponse> fetchFamilyReports(int? id, CancelToken cancelToken) {
+    return client.post(
+        '$baseUrl/api/v1/get_my_family_documents',
+        makePalyload({
+          "user_id": SharedConfig.userId,
+          'family_id': id,
+        }),
+        cancelToken: cancelToken);
+  }
+
+  Future<ApiResponse> addFamily({
+    required String name,
+    required String relation,
+    required String gender,
+  }) {
+    return client.post(
+      '$baseUrl/api/v1/add_family',
+      makePalyload({
+        "user_id": SharedConfig.userId,
+        "name": name,
+        "relation": relation,
+        "sex": gender.toLowerCase()
       }),
     );
   }

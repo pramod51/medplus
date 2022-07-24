@@ -31,14 +31,22 @@ class AppPageController extends GetxController {
     onTap(2);
   }
 
-  void onAddMemberClicked() {
+  void onAddMemberClicked({
+    String name = '',
+    String relation = '',
+    bool isMale = true,
+  }) {
     showDialog(
       context: Get.context!,
-      builder: (_) => const AlertDialog(
+      builder: (_) => AlertDialog(
         contentPadding: EdgeInsets.zero,
         content: SizedBox(
           width: double.maxFinite,
-          child: AddMemberDilog(),
+          child: AddMemberDilog(
+            name: name,
+            relation: relation,
+            isMale: isMale,
+          ),
         ),
       ),
     );

@@ -32,6 +32,7 @@ class DioClient {
     Options? options,
     CancelToken? cancelToken,
   }) async {
+    debugPrint(url + "\n" + data.toString());
     try {
       final response = await _dio.post<dynamic>(
         url,
@@ -55,6 +56,7 @@ class DioClient {
     dynamic data, {
     Options? options,
   }) async {
+    debugPrint(url + "\n" + data.toString());
     try {
       final response = await _dio.get<dynamic>(
         url,

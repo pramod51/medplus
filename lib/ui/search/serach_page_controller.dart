@@ -16,7 +16,6 @@ class SearchPageController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-
     print('Search onReady called');
   }
 
@@ -72,7 +71,7 @@ class SearchPageController extends GetxController {
     final apiResponse = await service.fetchFamily();
     if (apiResponse.success) {
       final responseData = FamilyResponse.fromMap(apiResponse.data);
-      if (responseData.familyData.isEmpty) {
+      if (responseData.data.isEmpty) {
         return false;
       }
       debugPrint('Family data Success${responseData.msg}');

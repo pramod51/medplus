@@ -19,7 +19,7 @@ class UploadReport extends AppPage {
     );
   }
 
-  final controller = Get.put(UploadReportPageController());
+  final controller = Get.find<UploadReportPageController>();
 
   @override
   Widget get body => Padding(
@@ -116,9 +116,9 @@ class UploadReport extends AppPage {
     return [
       Row(
         children: [
-          Text(
-            'Upload record for ${controller.familayName}',
-            style: const TextStyle(
+          const Text(
+            'Upload record for ',
+            style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               color: Palette.textLight,

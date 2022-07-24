@@ -11,6 +11,7 @@ import 'package:medplus/ui/search/search_page.dart';
 import 'package:medplus/ui/splash/splash_controller.dart';
 import 'package:medplus/ui/splash/splash_page.dart';
 import 'package:medplus/ui/uploadReport/upload_report.dart';
+import 'package:medplus/ui/uploadReport/upload_report_page_controller.dart';
 
 class Routes {
   Routes._();
@@ -69,7 +70,7 @@ class Routes {
         page: () => UploadReport(),
         binding: BindingsBuilder(
           () {
-            // Get.create(() => UploadReportPageController());
+            Get.create(() => UploadReportPageController());
           },
         ),
       ),

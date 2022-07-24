@@ -46,17 +46,16 @@ class Palette {
     return MaterialColor(color.value, swatch as Map<int, Color>);
   }
 
-  static Set<Color> colorForIcons = {
-    const Color(0xFFFFB531),
-    const Color(0xFF57D1E1),
-    const Color(0xFF8ED17E),
-    const Color(0xFFEE6D74),
-    const Color(0xFFF2A971),
-    const Color(0xFFA45A98),
-    const Color(0xFFD28790),
-    const Color(0xFF8489F4),
-    const Color(0xFF4987F3),
-  };
+  static List<Color> colorsList = [
+    const Color(0xFF948BFF),
+    const Color(0xFFFF7854),
+    const Color(0xFFFEA725),
+    const Color(0xFF43D9A3),
+  ];
+  static Color get randomColor {
+    final randomNum = Random().nextInt(4);
+    return colorsList[randomNum];
+  }
 
   static const Color defaultColorForIcon = Color(0xFFFFB531);
 }

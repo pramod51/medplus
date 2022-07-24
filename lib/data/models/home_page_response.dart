@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:medplus/data/models/family_response.dart';
 import 'package:medplus/data/models/search_report.dart';
+import 'package:medplus/res/palette.dart';
 
 class HomePageResponse {
   final String status;
@@ -39,7 +42,7 @@ class HomePageResponse {
 
 class HomePageData {
   final User user;
-  final List<MyFamily> myFamily;
+  final List<FamilyData> myFamily;
   final List<String> familyNames;
   final List<Category> category;
   final List<ReportData> yourReport;
@@ -63,24 +66,30 @@ class HomePageData {
   factory HomePageData.fromMap(Map<String, dynamic> map) {
     final nameList = <String>[];
     final list = map['myFamily'] == null
-        ? <MyFamily>[]
-        : List<MyFamily>.from(
-            (map['myFamily']).map<MyFamily>(
-              (x) => MyFamily.fromMap(x),
+        ? <FamilyData>[]
+        : List<FamilyData>.from(
+            (map['myFamily']).map<FamilyData>(
+              (x) => FamilyData.fromMap(x),
             ),
           );
-    for (MyFamily f in list) {
+    for (FamilyData f in list) {
       print(f.name);
       nameList.add(f.name);
+    }
+    final catList = map['category'] == null
+        ? <Category>[]
+        : List<Category>.from(
+            (map['category']).map<Category>(
+              (x) => Category.fromMap(x),
+            ),
+          );
+    for (int i = 0; i < catList.length; i++) {
+      catList[i].color = Palette.colorsList[i % 4];
     }
     return HomePageData(
       user: map['user'] == null ? User.fromMap({}) : User.fromMap(map['user']),
       myFamily: list,
-      category: List<Category>.from(
-        (map['category']).map<Category>(
-          (x) => Category.fromMap(x),
-        ),
-      ),
+      category: catList,
       yourReport: List<ReportData>.from(
         (map['yourReport']).map<ReportData>(
           (x) => ReportData.fromMap(x),
@@ -144,54 +153,6 @@ class User {
   factory User.fromJson(String source) => User.fromMap(json.decode(source));
 }
 
-class MyFamily {
-  final int id;
-  final int userId;
-  final String relation;
-  final String name;
-  final String phone;
-  final String sex;
-  final int status;
-  MyFamily({
-    required this.id,
-    required this.userId,
-    required this.relation,
-    required this.name,
-    required this.phone,
-    required this.sex,
-    required this.status,
-  });
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'user_id': userId,
-      'relation': relation,
-      'name': name,
-      'phone': phone,
-      'sex': sex,
-      'status': status,
-    };
-  }
-
-  factory MyFamily.fromMap(Map<String, dynamic> map) {
-    return MyFamily(
-      id: (map['id'] ?? 0),
-      userId: (map['user_id'].toInt() ?? 0),
-      relation: (map['relation'] ?? ''),
-      name: (map['name'] ?? ''),
-      phone: (map['phone'] ?? ''),
-      sex: (map['sex'] ?? ''),
-      status: (map['status'].toInt() ?? 0),
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory MyFamily.fromJson(String source) =>
-      MyFamily.fromMap(json.decode(source));
-}
-
 class Category {
   final int id;
   final String name;
@@ -201,6 +162,7 @@ class Category {
   final int status;
   final String created_at;
   final String updated_at;
+  Color? color;
   Category({
     required this.id,
     required this.name,
@@ -210,6 +172,7 @@ class Category {
     required this.status,
     required this.created_at,
     required this.updated_at,
+    this.color,
   });
 
   Map<String, dynamic> toMap() {

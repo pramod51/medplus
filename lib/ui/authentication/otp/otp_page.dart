@@ -11,10 +11,10 @@ import 'package:sms_autofill/sms_autofill.dart';
 class OtpPage extends SimpleScaffold {
   OtpPage({Key? key}) : super(key: key);
   static const routeName = "/otp";
-  static void start(String otp) {
+  static void start(dynamic args) {
     Get.toNamed(
       routeName,
-      arguments: otp,
+      arguments: args,
     );
   }
 

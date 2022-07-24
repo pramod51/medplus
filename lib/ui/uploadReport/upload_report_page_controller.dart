@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart' as dio;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart' as mat;
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:medplus/data/models/home_page_response.dart';
@@ -12,12 +13,13 @@ import 'package:medplus/widgets/app_snackbar.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 
-class UploadReportPageController extends AppPageController {
+class UploadReportPageController extends GetxController {
   final reportDate = ''.obs;
   final reminderDate = ''.obs;
   final apiStatus = emptyTuple.obs;
-  final uploadProgress = 0.obs;
-  String familayName = '';
+  final uploadProgress = 1.obs;
+  String familayName = 'ok';
+  int? familyId;
 
   Category category = Category.fromMap({});
   final subCategory = <String>[];
@@ -28,16 +30,14 @@ class UploadReportPageController extends AppPageController {
     super.onInit();
     familayName = Get.arguments[0].toString();
     category = Get.arguments[1] as Category;
-    selectedBottomNav.value = BottomNavItems.home;
+    familyId = Get.arguments[2];
+    debugPrint(
+        familayName + "\n" + category.toString() + "\n" + familyId.toString());
+
+    subCategory.clear();
     reminderDate.value =
         DateTime.now().add(const Duration(days: 7)).format('dd/MM/yyyy');
     reportDate.value = DateTime.now().format('dd/MM/yyyy');
-  }
-
-  @override
-  void onReady() {
-    super.onReady();
-    subCategory.clear();
   }
 
   void pickReminderDate() async {
@@ -77,13 +77,10 @@ class UploadReportPageController extends AppPageController {
       filename: reminderDate.value,
     );
     apiStatus.value = loadingTuple;
-    showProgress(Obx(
-      (() => mat.CircularProgressIndicator(
-            value: uploadProgress.value.toDouble() / 100,
-          )),
-    ));
+    showProgress();
     final service = await Get.put(ApiService()).uploadReport(
       data: data,
+      familyId: familyId,
       categoryId: category.id,
       nextCheckupDate: reminderDate.value,
       reportDate: reportDate.value,
@@ -178,5 +175,36 @@ class UploadReportPageController extends AppPageController {
       print(e);
     }
     return null;
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    Get.delete<UploadReportPageController>();
+  }
+
+  void showProgress() {
+    showDialog(
+      context: Get.context!,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        contentPadding: const mat.EdgeInsets.symmetric(horizontal: 24),
+        content: mat.Container(
+          color: Colors.transparent,
+          height: 100,
+          width: 100,
+          alignment: mat.Alignment.center,
+          child: Obx(
+            () => mat.CircularProgressIndicator(
+              value: uploadProgress / 100,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void hideProgress() {
+    Get.back();
   }
 }

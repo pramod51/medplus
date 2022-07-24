@@ -50,7 +50,7 @@ class ReportData {
   final int familyId;
   final int categoryId;
   final String subCategoryKey;
-  final String reports;
+  final String reportUrl;
   final String reportDate;
   final String next_checkup_date;
   final int status;
@@ -64,7 +64,7 @@ class ReportData {
     required this.familyId,
     required this.categoryId,
     required this.subCategoryKey,
-    required this.reports,
+    required this.reportUrl,
     required this.reportDate,
     required this.next_checkup_date,
     required this.status,
@@ -81,7 +81,7 @@ class ReportData {
       'family_id': familyId,
       'category_id': categoryId,
       'sub_category_key': subCategoryKey,
-      'reports': reports,
+      'report_url': reportUrl,
       'report_date': reportDate,
       'next_checkup_date': next_checkup_date,
       'status': status,
@@ -99,7 +99,7 @@ class ReportData {
       familyId: (map['family_id'] ?? 0),
       categoryId: (map['category_id'] ?? 0),
       subCategoryKey: (map['sub_category_key'] ?? ''),
-      reports: (map['reports'] ?? ''),
+      reportUrl: (map['report_url'] ?? ''),
       reportDate: map['report_date'] == null
           ? ''
           : DateTime.parse(map['report_date']).format('dd-MM-yyyy'),
@@ -121,6 +121,6 @@ class ReportData {
 
   @override
   String toString() {
-    return 'Data(id: $id, user_id: $userId, family_id: $familyId, category_id: $categoryId, sub_category_key: $subCategoryKey, reports: $reports, report_date: $reportDate, next_checkup_date: $next_checkup_date, status: $status, created_at: $created_at, updated_at: $updated_at, report_base_url: $reportBaseUrl, name_en: $categoryName)';
+    return 'Data(id: $id, user_id: $userId, family_id: $familyId, category_id: $categoryId, sub_category_key: $subCategoryKey, reports: $reportUrl, report_date: $reportDate, next_checkup_date: $next_checkup_date, status: $status, created_at: $created_at, updated_at: $updated_at, report_base_url: $reportBaseUrl, name_en: $categoryName)';
   }
 }

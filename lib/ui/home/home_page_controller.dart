@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medplus/data/models/family_response.dart';
 import 'package:medplus/data/models/home_page_response.dart';
 import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/services/network/api/api_services.dart';
@@ -10,6 +11,8 @@ class HomePageController extends AppPageController {
   final apiTupal = emptyTuple.obs;
   HomePageData? homePageData;
   String name = '';
+  int selectedTabIndex = 0;
+  int? familyId;
 
   @override
   void onInit() {
@@ -41,15 +44,14 @@ class HomePageController extends AppPageController {
     } else {}
   }
 
-  void onCategoryClicked(Category category) {
-    UploadReport.start([
-      name,
-      category,
-    ]);
+  void onCategoryClicked(Category category) async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    UploadReport.start([name, category, familyId]);
   }
 
-  void onTabClicked(String tabName) {
-    name = tabName;
+  void onTabClicked(FamilyData famData) {
+    name = famData.name;
+    familyId = famData.id;
   }
 
   void saveSubCategory() {

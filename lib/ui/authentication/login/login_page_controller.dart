@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medplus/data/models/login_response.dart';
-import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/authentication/otp/otp_page.dart';
 import 'package:medplus/widgets/app_snackbar.dart';
@@ -25,10 +24,11 @@ class LoginPageController extends GetxController {
     if (apiResponse.success) {
       final responseData = LoginResponse.fromMap(apiResponse.data);
       if (responseData.isValidUser) {
-        Get.find<AppPreferences>()
-            .saveInt(AppPreferencesKeys.userId, responseData.userId);
         hideProgress();
-        OtpPage.start(responseData.otp.toString());
+        OtpPage.start([
+          responseData.otp.toString(),
+          responseData.userId,
+        ]);
       } else {
         hideProgress();
         debugPrint(responseData.msg);

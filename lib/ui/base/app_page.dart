@@ -172,6 +172,7 @@ class AppPage extends StatelessWidget {
         width: 224,
         child: Column(
           children: [
+            const SizedBox(height: 20),
             buildCloseButton,
             buildDivider,
             buildDrawarItem(

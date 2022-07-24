@@ -114,7 +114,7 @@ class ReportTile extends StatelessWidget {
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(horizontal: 11),
             decoration: BoxDecoration(
-                color: const Color(0xff948BFF),
+                color: Palette.randomColor,
                 borderRadius: BorderRadius.circular(50)),
             child: Text(
               data.categoryName,

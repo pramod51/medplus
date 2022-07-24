@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:medplus/data/models/family_response.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/services/api_response.dart';
@@ -83,12 +84,14 @@ class HomePage extends AppPage {
   }
 
   Widget get buildProfileImage {
-    return AppNetworkImage(
-      width: 48,
-      height: 48,
-      initChar: initChar(controller.homePageData!.user.name),
-      url: controller.homePageData!.user.photoBaseUrl +
-          controller.homePageData!.user.profilePhotoUrl,
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: AppNetworkImage(
+        width: 48,
+        height: 48,
+        initChar: initChar(controller.homePageData!.user.name),
+        url: controller.homePageData!.user.profilePhotoUrl,
+      ),
     );
   }
 
@@ -127,21 +130,29 @@ class HomePage extends AppPage {
         height: 50,
       );
     }
-    final list = controller.homePageData!.familyNames;
+    final list = controller.homePageData!.myFamily;
 
     return AppTabBarPlain(
+      initialTabIndex: controller.selectedTabIndex,
       height: 33,
       tabs: [
         Tab(
           child: Text(controller.homePageData!.user.name),
         ),
-        for (String name in list) ...[
+        for (FamilyData data in list) ...[
           Tab(
-            child: Text(name),
+            child: Text(data.name),
           ),
         ]
       ],
-      onTabClicked: (int index) => controller.onTabClicked(list[index]),
+      onTabClicked: (int index) {
+        controller.selectedTabIndex = index;
+        if (index == 0) {
+          controller.name = controller.homePageData!.user.name;
+        }
+        controller.onTabClicked(
+            index == 0 ? FamilyData.fromMap({}) : list[index - 1]);
+      },
     );
   }
 
@@ -167,7 +178,7 @@ class HomePage extends AppPage {
               height: 124,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(18),
-                color: Palette.col7166F9,
+                color: data[index].color,
               ),
               child: Column(
                 children: [
@@ -182,7 +193,7 @@ class HomePage extends AppPage {
                     alignment: Alignment.center,
                     child: SvgPicture.asset(
                       Assets.ic_stethoscope,
-                      color: Palette.col7166F9,
+                      color: data[index].color,
                     ),
                   ),
                   const SizedBox(height: 10),
