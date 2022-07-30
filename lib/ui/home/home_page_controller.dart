@@ -72,4 +72,6 @@ class HomePageController extends AppPageController {
     pref.saveStringList(AppPreferencesKeys.subCategory, catList);
     SharedConfig.load(Get.find<AppPreferences>());
   }
+
+  void onGoogle() {}
 }
