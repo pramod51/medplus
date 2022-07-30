@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medplus/res/palette.dart';
-
 import 'app_translations.dart';
 import 'initial_bindings.dart';
 import 'routes/routes.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   await InitialBindings().dependencies();
   runApp(const MyApp());
 }

@@ -1,0 +1,135 @@
+{
+  "project_info": {
+    "project_number": "839479048982",
+    "firebase_url": "https://my-app-ddc5c.firebaseio.com",
+    "project_id": "my-app-ddc5c",
+    "storage_bucket": "my-app-ddc5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839479048982:android:480b39dbfeafcec50d6e37",
+        "android_client_info": {
+          "package_name": "com.example.medplus"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839479048982-llfn2hv9b2915cpelksfbfbe97bpri76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgkH1pYObcyEco0bT2KON-qlBf4ZsfKQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839479048982-llfn2hv9b2915cpelksfbfbe97bpri76.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839479048982:android:4d257f9bae1823090d6e37",
+        "android_client_info": {
+          "package_name": "com.example.nitaFriends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839479048982-fdtls4dhci4e3qsmorr8310guj1jsd72.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.nitaFriends",
+            "certificate_hash": "35a555f3f6cf4319599666c02aee860c5a882dd6"
+          }
+        },
+        {
+          "client_id": "839479048982-llfn2hv9b2915cpelksfbfbe97bpri76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgkH1pYObcyEco0bT2KON-qlBf4ZsfKQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839479048982-llfn2hv9b2915cpelksfbfbe97bpri76.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839479048982:android:ac136149054d95460d6e37",
+        "android_client_info": {
+          "package_name": "com.prohostmag.vpn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839479048982-llfn2hv9b2915cpelksfbfbe97bpri76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgkH1pYObcyEco0bT2KON-qlBf4ZsfKQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839479048982-llfn2hv9b2915cpelksfbfbe97bpri76.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839479048982:android:1fa7c72a07a8ff970d6e37",
+        "android_client_info": {
+          "package_name": "com.vaibhavmojidra.notificationdemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839479048982-llfn2hv9b2915cpelksfbfbe97bpri76.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgkH1pYObcyEco0bT2KON-qlBf4ZsfKQQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839479048982-llfn2hv9b2915cpelksfbfbe97bpri76.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

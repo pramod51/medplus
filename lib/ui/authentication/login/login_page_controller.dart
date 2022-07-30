@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medplus/data/models/login_response.dart';
 import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/authentication/otp/otp_page.dart';
@@ -8,7 +9,7 @@ import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginPageController extends GetxController {
   final phoneTextEditingController = TextEditingController();
-
+  final googleSignIn = GoogleSignIn();
   void onLoginClicked() async {
     // AppSnackBar.onSuccess('Sending OTP to your device Please wait');
     final signature = await SmsAutoFill().getAppSignature;
@@ -61,5 +62,9 @@ class LoginPageController extends GetxController {
 
   void hideProgress() {
     Get.back();
+  }
+
+  void onGoogleSIgneInClicked() async {
+    final googleUser = await googleSignIn.signIn();
   }
 }

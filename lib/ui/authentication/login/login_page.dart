@@ -75,6 +75,15 @@ class LoginPage extends SimpleScaffold {
           color: Palette.lightBgColor,
           textColor: Palette.textColor,
         ),
+        SizedBox(height: 12),
+        AppElevatedBtn(
+          onPressed: controller.onGoogleSIgneInClicked,
+          width: 189,
+          borderRadius: 245,
+          text: 'Google SignIn',
+          color: Palette.lightBgColor,
+          textColor: Palette.textColor,
+        ),
         const SizedBox(height: 50),
       ],
     );
