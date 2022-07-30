@@ -7,6 +7,8 @@ import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/base/app_page_controller.dart';
 import 'package:medplus/ui/uploadReport/upload_report.dart';
 
+// SHA1: 73:D6:34:D4:C1:BF:CB:72:F1:7E:5A:32:D0:15:8A:09:2B:E9:17:95
+//  SHA256: F9:C8:4B:B2:33:2D:7E:48:1F:5A:89:CD:6F:98:55:AE:A4:65:05:0C:50:F5:43:2C:96:AE:B6:65:11:B0:E0:CE
 class HomePageController extends AppPageController {
   final apiTupal = emptyTuple.obs;
   HomePageData? homePageData;
