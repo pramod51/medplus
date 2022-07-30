@@ -31,6 +31,12 @@ class AppPageController extends GetxController {
     onTap(2);
   }
 
+  @override
+  void onInit() {
+    super.onInit();
+    SharedConfig.load(Get.find<AppPreferences>());
+  }
+
   void onAddMemberClicked({
     String name = '',
     String relation = '',
@@ -62,6 +68,7 @@ class AppPageController extends GetxController {
 
   void onSignOutClicked() async {
     await Get.find<AppPreferences>().clearAll();
+    await Get.deleteAll();
     LoginPage.start();
   }
 

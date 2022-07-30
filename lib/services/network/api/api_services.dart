@@ -88,12 +88,12 @@ class ApiService {
     return File(savePath);
   }
 
-  Future<ApiResponse> searchReport(String query, CancelToken cancelToken) {
+  Future<ApiResponse> searchReport(String query, CancelToken? cancelToken) {
     return client.post(
-      '$baseUrl/api/v1/get_my_documents',
+      '$baseUrl/api/v1/search_documents',
       makePalyload({
         "user_id": SharedConfig.userId,
-        'search_key': query,
+        'key': query,
       }),
       cancelToken: cancelToken,
     );

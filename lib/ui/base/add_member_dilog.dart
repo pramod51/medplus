@@ -178,12 +178,15 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
     );
     if (apiResponse.success) {
       final data = AddFamily.fromMap(apiResponse.data);
-      final homepageData = Get.put(HomePageController()).homePageData;
+      final homepageData = Get.find<HomePageController>().homePageData;
       Get.put(MyAccountPageController()).familyList.add(data.data);
       Get.put(SearchPageController()).familyNameMap[data.data.id!] =
           data.data.name;
       if (homepageData != null) {
         homepageData.myFamily.add(data.data);
+        for (FamilyData f in homepageData.myFamily) {
+          print(f.name);
+        }
       }
       controller.hideProgress();
       Get.back();

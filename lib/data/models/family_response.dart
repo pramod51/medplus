@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+
 class FamilyResponse {
   final String status;
   final String msg;
@@ -20,10 +22,10 @@ class FamilyResponse {
 
   factory FamilyResponse.fromMap(Map<String, dynamic> map) {
     final list = map['data'] == null
-        ? <FamilyData>[]
+        ? <FamilyData>[].obs
         : List<FamilyData>.from((map['data']).map<FamilyData>(
             (x) => FamilyData.fromMap(x),
-          ));
+          )).obs;
 
     return FamilyResponse(
       status: (map['status'] ?? ''),

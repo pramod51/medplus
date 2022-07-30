@@ -13,6 +13,7 @@ class HomePageController extends AppPageController {
   String name = '';
   int selectedTabIndex = 0;
   int? familyId;
+  TabController? tabController;
 
   @override
   void onInit() {
@@ -23,7 +24,6 @@ class HomePageController extends AppPageController {
   @override
   void onReady() {
     super.onReady();
-
     selectedBottomNav.value = BottomNavItems.home;
   }
 
@@ -59,12 +59,15 @@ class HomePageController extends AppPageController {
 
   void saveSubCategory() {
     if (homePageData == null) return;
+
+    final pref = Get.find<AppPreferences>();
+    pref.saveString(AppPreferencesKeys.name, homePageData!.user.name);
+    pref.saveInt(AppPreferencesKeys.userId, homePageData!.user.id);
     final catList = <String>[];
     for (Category cat in homePageData!.category) {
       catList.addAll(cat.subCategory.split(','));
     }
-
-    Get.find<AppPreferences>()
-        .saveStringList(AppPreferencesKeys.subCategory, catList);
+    pref.saveStringList(AppPreferencesKeys.subCategory, catList);
+    SharedConfig.load(Get.find<AppPreferences>());
   }
 }

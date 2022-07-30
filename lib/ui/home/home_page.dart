@@ -135,30 +135,33 @@ class HomePage extends AppPage {
         height: 50,
       );
     }
-    final list = controller.homePageData!.myFamily;
 
-    return AppTabBarPlain(
-      initialTabIndex: controller.selectedTabIndex,
-      height: 33,
-      tabs: [
-        Tab(
-          child: Text(controller.homePageData!.user.name),
-        ),
-        for (FamilyData data in list) ...[
+    return Obx(() {
+      final list = controller.homePageData!.myFamily;
+
+      return AppTabBarPlain(
+        initialTabIndex: controller.selectedTabIndex,
+        height: 33,
+        tabs: [
           Tab(
-            child: Text(data.name),
+            child: Text(controller.homePageData!.user.name),
           ),
-        ]
-      ],
-      onTabClicked: (int index) {
-        controller.selectedTabIndex = index;
-        if (index == 0) {
-          controller.name = controller.homePageData!.user.name;
-        }
-        controller.onTabClicked(
-            index == 0 ? FamilyData.fromMap({}) : list[index - 1]);
-      },
-    );
+          for (FamilyData data in list) ...[
+            Tab(
+              child: Text(data.name),
+            ),
+          ]
+        ],
+        onTabClicked: (int index) {
+          controller.selectedTabIndex = index;
+          if (index == 0) {
+            controller.name = controller.homePageData!.user.name;
+          }
+          controller.onTabClicked(
+              index == 0 ? FamilyData.fromMap({}) : list[index - 1]);
+        },
+      );
+    });
   }
 
   Widget buildGrid() {

@@ -22,28 +22,33 @@ class SearchPage extends AppPage {
   Widget get body {
     return Obx(
       () {
-        if (controller.apiTupal.value.item1 == ApiStatus.SUCCESS) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildSearchBox,
-                  const SizedBox(height: 18),
-                  ...buildSuggestions(),
-                  const SizedBox(height: 19),
+        return SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildSearchBox,
+                const SizedBox(height: 18),
+                ...buildSuggestions(),
+                const SizedBox(height: 19),
+                if (controller.apiTupal.value.item1 == ApiStatus.SUCCESS) ...[
                   ...buildAllResults(),
-                ],
-              ),
+                ] else if (controller.apiTupal.value.item1 ==
+                    ApiStatus.LOADING) ...[
+                  Center(child: loadingScreen)
+                ] else if (controller.apiTupal.value.item1 ==
+                    ApiStatus.SERVER_ERROR) ...[
+                  Center(
+                    child: ErrorScreen(
+                      onTryAgain: controller.search,
+                    ),
+                  )
+                ]
+              ],
             ),
-          );
-        } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
-          return ErrorScreen(
-            onTryAgain: controller.search,
-          );
-        }
-        return loadingScreen;
+          ),
+        );
       },
     );
   }
@@ -70,7 +75,7 @@ class SearchPage extends AppPage {
 
   Widget get buildSearchBox {
     return InputFormField(
-      controller: TextEditingController(),
+      controller: controller.textEditingController,
       prefixIcon: SvgPicture.asset(
         Assets.ic_search,
         height: 20,
@@ -102,7 +107,16 @@ class SearchPage extends AppPage {
           for (int i = 0; i < list.length; i++) ...[
             SimpleChip(
               text: list[i],
-              onClick: (bool val) {},
+              onClick: (bool val) {
+                if (val) {
+                  controller.suggestions.add(list[i]);
+                } else {
+                  controller.suggestions
+                      .removeWhere((element) => element == list[i]);
+                }
+                controller.textEditingController.text =
+                    controller.suggestions.join(' ');
+              },
             ),
           ]
         ],
@@ -144,7 +158,9 @@ class SearchPage extends AppPage {
                 final data = controller.data[index];
                 return ReportTile(
                   data: data,
-                  userName: controller.familyNameMap[data.id] ?? '',
+                  userName: controller.familyNameMap[data.familyId] ??
+                      SharedConfig.name ??
+                      'No name',
                 );
               },
               separatorBuilder: (_, __) => const SizedBox(height: 16),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:medplus/data/models/family_response.dart';
 import 'package:medplus/data/models/search_report.dart';
 import 'package:medplus/res/palette.dart';
@@ -66,12 +67,12 @@ class HomePageData {
   factory HomePageData.fromMap(Map<String, dynamic> map) {
     final nameList = <String>[];
     final list = map['myFamily'] == null
-        ? <FamilyData>[]
+        ? <FamilyData>[].obs
         : List<FamilyData>.from(
             (map['myFamily']).map<FamilyData>(
               (x) => FamilyData.fromMap(x),
             ),
-          );
+          ).obs;
     for (FamilyData f in list) {
       print(f.name);
       nameList.add(f.name);

@@ -22,26 +22,28 @@ class AppTabBarPlain extends StatefulWidget {
   _AppTabBarPlainState createState() => _AppTabBarPlainState();
 }
 
-/// Used to create only tabs
 class _AppTabBarPlainState extends State<AppTabBarPlain>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   TabController? tabController;
 
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: widget.tabs.length, vsync: this);
-    tabController?.index = widget.initialTabIndex;
   }
 
   @override
   void dispose() {
-    tabController?.dispose();
     super.dispose();
+    tabController?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if ((tabController?.length ?? 0) < widget.tabs.length) {
+      tabController?.dispose();
+    }
+    tabController = TabController(length: widget.tabs.length, vsync: this);
+    tabController?.index = widget.initialTabIndex;
     return SizedBox(
       height: widget.height,
       child: TabBar(
