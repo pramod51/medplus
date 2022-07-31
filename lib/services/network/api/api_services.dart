@@ -19,6 +19,10 @@ class ApiService {
     };
   }
 
+  Future<ApiResponse> fetchCountryCode() {
+    return client.get('http://ip-api.com/json', null);
+  }
+
   Future<ApiResponse> doLogin(String phone) {
     return client.post(
       '$baseUrl/api/v1/get_challenge',

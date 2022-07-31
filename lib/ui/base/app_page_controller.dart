@@ -67,9 +67,10 @@ class AppPageController extends GetxController {
   void onRefAFrdClicked() {}
 
   void onSignOutClicked() async {
+    final code = SharedConfig.countryCode;
     await Get.find<AppPreferences>().clearAll();
     await Get.deleteAll();
-    LoginPage.start();
+    LoginPage.start(code);
   }
 
   void onTap(int index) {

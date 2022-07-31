@@ -11,8 +11,8 @@ import 'package:medplus/widgets/input_form_field.dart';
 
 class LoginPage extends SimpleScaffold {
   static const routeName = "/login";
-  static void start() {
-    Get.offAllNamed(routeName);
+  static void start(dynamic arg) {
+    Get.offAllNamed(routeName, arguments: arg);
   }
 
   LoginPage({Key? key}) : super(key: key);
@@ -57,8 +57,18 @@ class LoginPage extends SimpleScaffold {
             hint: 'Mobile Number',
             fontSize: 13,
             keyboardType: TextInputType.number,
+            onChange: (val) {
+              if (val.length < Get.arguments.toString().length) {
+                controller.phoneTextEditingController.text = Get.arguments;
+
+                controller.phoneTextEditingController.selection =
+                    TextSelection.fromPosition(TextPosition(
+                        offset:
+                            controller.phoneTextEditingController.text.length));
+              }
+            },
             inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+              FilteringTextInputFormatter.allow(RegExp('[0-9+ ]')),
             ],
             textColor: Colors.white.withOpacity(0.7),
             outlineColor: Colors.white.withOpacity(0.7),
@@ -75,7 +85,7 @@ class LoginPage extends SimpleScaffold {
           color: Palette.lightBgColor,
           textColor: Palette.textColor,
         ),
-        SizedBox(height: 12),
+        const SizedBox(height: 12),
         AppElevatedBtn(
           onPressed: controller.onGoogleSIgneInClicked,
           width: 189,

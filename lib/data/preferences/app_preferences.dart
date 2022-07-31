@@ -50,18 +50,23 @@ class AppPreferencesKeys {
   static const String userId = 'userId';
   static const String name = 'name';
   static const String subCategory = 'subCategory';
+  static const String countryCode = 'countryCode';
 }
 
 class SharedConfig {
   static int? _userId;
   static String? _name;
   static List<String>? _subCategory;
+  static String? _countryCode;
+
   static int? get userId => _userId;
   static String? get name => _name;
+  static String? get countryCode => _countryCode;
   static List<String>? get subCategory => _subCategory;
   static void load(AppPreferences prefs) {
     _userId = prefs.getInt(AppPreferencesKeys.userId);
     _name = prefs.getString(AppPreferencesKeys.name);
     _subCategory = prefs.getStringList(AppPreferencesKeys.subCategory);
+    _countryCode = prefs.getString(AppPreferencesKeys.countryCode);
   }
 }
