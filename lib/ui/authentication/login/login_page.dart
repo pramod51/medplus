@@ -26,9 +26,9 @@ class LoginPage extends SimpleScaffold {
           color: Palette.buttonColor,
         ),
         buildMiddleImage,
-        const Text(
-          'Login Now',
-          style: TextStyle(
+        Text(
+          'login_now'.tr,
+          style: const TextStyle(
             fontSize: 24,
             height: 29 / 24,
             color: Colors.white,
@@ -36,12 +36,12 @@ class LoginPage extends SimpleScaffold {
           ),
         ),
         const SizedBox(height: 7),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Text(
-            'Please enter details below to continue',
+            'login_desc'.tr,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
               height: 24 / 16,
               color: Colors.white,
@@ -54,7 +54,7 @@ class LoginPage extends SimpleScaffold {
           padding: const EdgeInsets.symmetric(horizontal: 27),
           child: InputFormField(
             controller: controller.phoneTextEditingController,
-            hint: 'Mobile Number',
+            hint: 'mob_num'.tr,
             fontSize: 13,
             keyboardType: TextInputType.number,
             onChange: (val) {
@@ -81,7 +81,7 @@ class LoginPage extends SimpleScaffold {
           onPressed: controller.onLoginClicked,
           width: 189,
           borderRadius: 245,
-          text: 'Request OTP',
+          text: 'request_otp'.tr,
           color: Palette.lightBgColor,
           textColor: Palette.textColor,
         ),

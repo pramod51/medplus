@@ -139,6 +139,7 @@ class MyAccountPage extends AppPage {
             const SizedBox(width: 8),
             GestureDetector(
                 onTap: () => controller.onAddMemberClicked(
+                    familyId: data.id?.toString() ?? '',
                     name: data.name,
                     relation: data.relation,
                     isMale: data.sex.toLowerCase() == 'male'),

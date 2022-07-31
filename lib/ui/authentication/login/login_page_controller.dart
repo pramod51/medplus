@@ -74,6 +74,7 @@ class LoginPageController extends GetxController {
   }
 
   void onGoogleSIgneInClicked() async {
+    return;
     try {
       final facebookLoginResult = await FacebookAuth.instance.login();
       final userData = await FacebookAuth.instance.getUserData();

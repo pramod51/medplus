@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/res/palette.dart';
 import 'app_translations.dart';
 import 'initial_bindings.dart';
@@ -21,16 +22,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Medplus',
-      // textDirection: TextDirection.rtl,
+      textDirection: SharedConfig.textDirection,
       debugShowCheckedModeBanner: false,
       smartManagement: SmartManagement.onlyBuilder,
       translations: AppTranslations.get(),
-      locale: Get.deviceLocale,
+      locale: SharedConfig.locale,
       fallbackLocale: const Locale.fromSubtags(
         languageCode: 'en',
         countryCode: 'US',
       ),
-
       theme: lightTheme,
       themeMode: ThemeMode.light,
       getPages: Routes.get(),
@@ -59,3 +59,34 @@ ThemeData get lightTheme => ThemeData(
       fontFamily: 'Montserrat',
       scaffoldBackgroundColor: Colors.white,
     );
+
+class RestartWidget extends StatefulWidget {
+  const RestartWidget({
+    Key? key,
+  }) : super(key: key);
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_RestartWidgetState>()?.restartApp();
+  }
+
+  @override
+  _RestartWidgetState createState() => _RestartWidgetState();
+}
+
+class _RestartWidgetState extends State<RestartWidget> {
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return KeyedSubtree(
+      key: key,
+      child: const MyApp(),
+    );
+  }
+}

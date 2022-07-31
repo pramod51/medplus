@@ -8,7 +8,7 @@ import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/base/app_page_controller.dart';
 import 'package:medplus/ui/home/home_page_controller.dart';
 import 'package:medplus/ui/myAccount/my_account_page_controller.dart';
-import 'package:medplus/ui/search/serach_page_controller.dart';
+import 'package:medplus/ui/search/search_page_controller.dart';
 import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/app_snackbar.dart';
 import 'package:medplus/widgets/input_form_field.dart';
@@ -18,8 +18,10 @@ class AddMemberDilog extends StatefulWidget {
   final String name;
   final String relation;
   final bool isMale;
+  final String familyId;
   const AddMemberDilog({
     Key? key,
+    this.familyId = '',
     this.name = '',
     this.relation = '',
     this.isMale = true,
@@ -152,7 +154,7 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
         const SizedBox(width: 25),
         AppElevatedBtn(
           onPressed: addMember,
-          text: '+ Add Member',
+          text: widget.familyId.isNotEmpty ? 'Update' : 'Add Member',
           textColor: Colors.white,
         ),
       ],
@@ -169,6 +171,14 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
       return;
     }
     controller.showProgress();
+    if (widget.familyId.isEmpty) {
+      addMember();
+    } else {
+      updateFamily();
+    }
+  }
+
+  void addFamily() async {
     final service = Get.put(ApiService());
 
     final apiResponse = await service.addFamily(
@@ -188,6 +198,43 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
           print(f.name);
         }
       }
+      controller.hideProgress();
+      Get.back();
+      AppSnackBar.onSuccess('Added Succesfully');
+    } else {
+      controller.hideProgress();
+      AppSnackBar.onError(apiResponse.message);
+    }
+  }
+
+  void updateFamily() async {
+    final service = Get.put(ApiService());
+
+    final apiResponse = await service.updateFamily(
+      id: widget.familyId,
+      name: nameTextEditingController.text,
+      relation: relationTextEditingController.text,
+      gender: isMale ? 'male' : 'female',
+    );
+    if (apiResponse.success) {
+      // final data = AddFamily.fromMap(apiResponse.data);
+      final homepageData = Get.find<HomePageController>().homePageData;
+      final myAccController = Get.put(MyAccountPageController());
+      if (myAccController.familyList.isNotEmpty) {
+        myAccController.familyList[myAccController.familyList
+            .indexWhere((e) => e.id?.toString() == widget.familyId)];
+      }
+
+      Get.put(SearchPageController())
+              .familyNameMap[int.parse(widget.familyId)] =
+          nameTextEditingController.text;
+      //     data.data.name;
+      // if (homepageData != null) {
+      //   homepageData.myFamily.add(data.data);
+      //   for (FamilyData f in homepageData.myFamily) {
+      //     print(f.name);
+      //   }
+      // }
       controller.hideProgress();
       Get.back();
       AppSnackBar.onSuccess('Added Succesfully');

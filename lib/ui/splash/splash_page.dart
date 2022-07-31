@@ -30,10 +30,10 @@ class SplashPage extends SimpleScaffold {
           ),
           const Spacer(flex: 47),
           SvgPicture.asset(Assets.ic_medplus),
-          const Text(
-            'Upload your documents now',
+          Text(
+            'upload_your_documents_now'.tr,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 19,
               color: Colors.white,
               fontWeight: FontWeight.w500,

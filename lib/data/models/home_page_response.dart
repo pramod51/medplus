@@ -163,6 +163,7 @@ class Category {
   final int status;
   final String created_at;
   final String updated_at;
+  bool isSelected;
   Color? color;
   Category({
     required this.id,
@@ -174,6 +175,7 @@ class Category {
     required this.created_at,
     required this.updated_at,
     this.color,
+    this.isSelected = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -211,4 +213,45 @@ class Category {
   String toString() {
     return 'Category(id: $id, name_en: $name, name_ar: $name_ar, sub_category_en: $subCategory, sub_category_ar: $sub_category_ar, status: $status, created_at: $created_at, updated_at: $updated_at)';
   }
+}
+
+class CategoryResponse {
+  final String status;
+  final String msg;
+  final List<Category> data;
+  CategoryResponse({
+    required this.status,
+    required this.msg,
+    required this.data,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'status': status,
+      'msg': msg,
+      'data': data.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory CategoryResponse.fromMap(Map<String, dynamic> map) {
+    return CategoryResponse(
+      status: (map['status'] ?? ''),
+      msg: (map['msg'] ?? ''),
+      data: map['data'] == null
+          ? <Category>[]
+          : List<Category>.from(
+              (map['data']).map<Category>(
+                (x) => Category.fromMap(x),
+              ),
+            ),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory CategoryResponse.fromJson(String source) =>
+      CategoryResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  String toString() => 'Ajdkjd(status: $status, msg: $msg, data: $data)';
 }

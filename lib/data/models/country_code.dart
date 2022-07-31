@@ -2,7 +2,9 @@ import 'dart:convert';
 
 class CountryCode {
   final String status;
-  final String countryCode;
+  final String ccc;
+  final String cc;
+
   static const code = {
     'AF': '+93 ',
     'AL': '+355 ',
@@ -233,22 +235,20 @@ class CountryCode {
     'ZM': '+260 ',
     'ZW': '+263 ',
   };
-  CountryCode({
-    required this.status,
-    required this.countryCode,
-  });
+  CountryCode({required this.status, required this.cc, required this.ccc});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
-      'countryCode': countryCode,
+      'countryCode': cc,
     };
   }
 
   factory CountryCode.fromMap(Map<String, dynamic> map) {
     return CountryCode(
       status: (map['status'] ?? ''),
-      countryCode: code[(map['countryCode'] ?? '')] ?? '',
+      cc: (map['countryCode'] ?? ''),
+      ccc: code[(map['countryCode'] ?? '')] ?? '',
     );
   }
 

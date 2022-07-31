@@ -6,7 +6,7 @@ import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/base/app_page.dart';
-import 'package:medplus/ui/search/serach_page_controller.dart';
+import 'package:medplus/ui/search/search_page_controller.dart';
 import 'package:medplus/widgets/api_response_widget.dart';
 import 'package:medplus/widgets/input_form_field.dart';
 import 'package:medplus/widgets/report_tile.dart';

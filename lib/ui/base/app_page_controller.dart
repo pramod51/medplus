@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medplus/data/preferences/app_preferences.dart';
+import 'package:medplus/main.dart';
 import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/authentication/login/login_page.dart';
 import 'package:medplus/ui/base/add_member_dilog.dart';
@@ -38,6 +39,7 @@ class AppPageController extends GetxController {
   }
 
   void onAddMemberClicked({
+    String familyId = '',
     String name = '',
     String relation = '',
     bool isMale = true,
@@ -49,6 +51,7 @@ class AppPageController extends GetxController {
         content: SizedBox(
           width: double.maxFinite,
           child: AddMemberDilog(
+            familyId: familyId,
             name: name,
             relation: relation,
             isMale: isMale,
@@ -62,12 +65,26 @@ class AppPageController extends GetxController {
     onTap(3);
   }
 
-  void onLanguageClicked() {}
+  void onLanguageClicked() async {
+    final pref = Get.find<AppPreferences>();
+    if (SharedConfig.locale?.languageCode == 'en') {
+      pref.saveString(AppPreferencesKeys.languageCode, 'ar');
+      pref.saveString(AppPreferencesKeys.countryCode, 'UAE');
+      await Get.updateLocale(const Locale('ar', 'UAE'));
+    } else {
+      pref.saveString(AppPreferencesKeys.languageCode, 'en');
+      pref.saveString(AppPreferencesKeys.countryCode, 'US');
+      await Get.updateLocale(const Locale('en', 'US'));
+    }
+    SharedConfig.load(pref);
+    Get.back();
+    runApp(const RestartWidget());
+  }
 
   void onRefAFrdClicked() {}
 
   void onSignOutClicked() async {
-    final code = SharedConfig.countryCode;
+    final code = SharedConfig.callingCountryCode;
     await Get.find<AppPreferences>().clearAll();
     await Get.deleteAll();
     LoginPage.start(code);

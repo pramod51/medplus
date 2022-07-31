@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medplus/res/palette.dart';
 
-class AppCheckBox extends StatefulWidget {
+class AppCheckBox extends StatelessWidget {
   final bool filled;
   final Widget? child;
   final BoxShape shape;
@@ -28,37 +28,24 @@ class AppCheckBox extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AppCheckBox> createState() => _AppCheckBoxState();
-}
-
-class _AppCheckBoxState extends State<AppCheckBox> {
-  bool isFilled = false;
-  @override
-  void initState() {
-    super.initState();
-    isFilled = widget.filled;
-  }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => setState(() {
-        isFilled = !isFilled;
-        widget.onTap?.call(!widget.filled);
-      }),
+      onTap: () {
+        onTap?.call(!filled);
+      },
       child: Padding(
-        padding: widget.padding, // For Tap Target
+        padding: padding, // For Tap Target
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: widget.crossAxisAlignment,
+          crossAxisAlignment: crossAxisAlignment,
           children: [
             buildCheckBox,
-            if (widget.child != null || widget.label.isNotEmpty) ...[
-              SizedBox(width: widget.innerPadding),
+            if (child != null || label.isNotEmpty) ...[
+              SizedBox(width: innerPadding),
               Expanded(
-                child: widget.child ??
+                child: child ??
                     Text(
-                      widget.label,
+                      label,
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
@@ -76,18 +63,18 @@ class _AppCheckBoxState extends State<AppCheckBox> {
   Widget get buildCheckBox {
     BoxBorder border = Border.all(color: Palette.crayola, width: 1);
     return AnimatedContainer(
-      width: widget.size,
-      height: widget.size,
+      width: size,
+      height: size,
       // padding: EdgeInsets.all(shape == BoxShape.circle ? 4 : 1),
       curve: Curves.easeOutExpo,
       duration: const Duration(milliseconds: 250),
       decoration: BoxDecoration(
-        color: isFilled ? widget.filledColor : Colors.transparent,
-        border: isFilled ? null : border,
+        color: filled ? filledColor : Colors.transparent,
+        border: filled ? null : border,
         borderRadius: BorderRadius.circular(5),
       ),
       child: AnimatedScale(
-        scale: isFilled ? 1 : 0,
+        scale: filled ? 1 : 0,
         curve: Curves.easeOutExpo,
         duration: const Duration(milliseconds: 250),
         child: const Icon(

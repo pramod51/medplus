@@ -122,15 +122,17 @@ class ReportListing extends AppPage {
         );
       }
 
-      return ListView.separated(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: controller.data.length,
-        shrinkWrap: true,
-        itemBuilder: (_, index) => ReportTile(
-          userName: controller.familyList[controller.selectedIndex].name,
-          data: controller.data[index],
+      return Obx(
+        () => ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: controller.data.length,
+          shrinkWrap: true,
+          itemBuilder: (_, index) => ReportTile(
+            userName: controller.familyList[controller.selectedIndex].name,
+            data: controller.data[index],
+          ),
+          separatorBuilder: (_, __) => const SizedBox(height: 16),
         ),
-        separatorBuilder: (_, __) => const SizedBox(height: 16),
       );
     } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
       return ErrorScreen(
@@ -142,5 +144,14 @@ class ReportListing extends AppPage {
   }
 
   @override
-  Widget? get drawer => const ReportFilter();
+  Widget? get drawer => Obx(
+        () => ReportFilter(
+          category: controller.category,
+          onCategorySelected: (String selectedCat, bool isSelected) {},
+          onSortFilterChanged: controller.onSortChanges,
+          sortFilter: controller.sorting.value,
+          onFilterApplied: controller.categoryFilter,
+          onFilterRemoved: controller.onFilterRemoved,
+        ),
+      );
 }

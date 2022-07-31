@@ -27,7 +27,7 @@ class ApiService {
     return client.post(
       '$baseUrl/api/v1/get_challenge',
       makePalyload({
-        "phone": int.parse(phone),
+        "phone": '9628742706',
       }),
     );
   }
@@ -35,6 +35,15 @@ class ApiService {
   Future<ApiResponse> fetchHomePageData() {
     return client.post(
       '$baseUrl/api/v1/my_dashboard',
+      makePalyload({
+        "user_id": SharedConfig.userId,
+      }),
+    );
+  }
+
+  Future<ApiResponse> fetchCategories() {
+    return client.post(
+      '$baseUrl/api/v1/get_category',
       makePalyload({
         "user_id": SharedConfig.userId,
       }),
@@ -130,6 +139,24 @@ class ApiService {
     return client.post(
       '$baseUrl/api/v1/add_family',
       makePalyload({
+        "user_id": SharedConfig.userId,
+        "name": name,
+        "relation": relation,
+        "sex": gender.toLowerCase()
+      }),
+    );
+  }
+
+  Future<ApiResponse> updateFamily({
+    required String id,
+    required String name,
+    required String relation,
+    required String gender,
+  }) {
+    return client.post(
+      '$baseUrl/api/v1/update_family',
+      makePalyload({
+        'family_id': id,
         "user_id": SharedConfig.userId,
         "name": name,
         "relation": relation,

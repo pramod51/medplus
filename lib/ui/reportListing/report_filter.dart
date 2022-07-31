@@ -1,14 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:medplus/data/models/home_page_response.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
+import 'package:medplus/ui/reportListing/report_listing_page_controller.dart';
 import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/app_check_box.dart';
 import 'package:medplus/widgets/input_form_field.dart';
 
 class ReportFilter extends StatelessWidget {
-  const ReportFilter({Key? key}) : super(key: key);
+  final List<Category> category;
+  final Function(String selectedCat, bool isSelected) onCategorySelected;
+  final SortFilter sortFilter;
+  final Function(SortFilter) onSortFilterChanged;
+  final VoidCallback onFilterApplied;
+  final VoidCallback onFilterRemoved;
+
+  const ReportFilter({
+    Key? key,
+    required this.category,
+    required this.onCategorySelected,
+    required this.sortFilter,
+    required this.onSortFilterChanged,
+    required this.onFilterApplied,
+    required this.onFilterRemoved,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -81,24 +98,20 @@ class ReportFilter extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 13),
-      const AppCheckBox(
-        filled: false,
-        label: 'Pathology',
-      ),
-      const SizedBox(height: 10),
-      const AppCheckBox(
-        filled: false,
-        label: 'Radiology',
-      ),
-      const SizedBox(height: 10),
-      const AppCheckBox(
-        filled: false,
-        label: 'Surgery',
-      ),
-      const SizedBox(height: 10),
-      const AppCheckBox(
-        filled: false,
-        label: 'Bills/Receipts',
+      ListView.separated(
+        shrinkWrap: true,
+        itemCount: category.length,
+        itemBuilder: (_, index) {
+          return AppCheckBox(
+            filled: category[index].isSelected,
+            label: category[index].name,
+            onTap: (val) {
+              category[index].isSelected = val;
+              onCategorySelected(category[index].name, val);
+            },
+          );
+        },
+        separatorBuilder: (_, __) => const SizedBox(height: 10),
       ),
     ];
   }
@@ -114,37 +127,48 @@ class ReportFilter extends StatelessWidget {
         ),
       ),
       const SizedBox(height: 23),
-      const AppCheckBox(
-        filled: false,
+      AppCheckBox(
+        filled: sortFilter == SortFilter.latest,
         label: 'Latest',
+        onTap: (val) {
+          if (sortFilter == SortFilter.latest) {
+            onSortFilterChanged(SortFilter.none);
+            return;
+          }
+          onSortFilterChanged(SortFilter.latest);
+        },
       ),
       const SizedBox(height: 10),
-      const AppCheckBox(
-        filled: false,
+      AppCheckBox(
+        filled: sortFilter == SortFilter.old,
         label: 'Old',
-      ),
-      const SizedBox(height: 10),
-      const AppCheckBox(
-        filled: false,
-        label: 'Size',
+        onTap: (val) {
+          if (sortFilter == SortFilter.old) {
+            onSortFilterChanged(SortFilter.none);
+            return;
+          }
+          onSortFilterChanged(SortFilter.old);
+        },
       ),
     ];
   }
 
   Widget get buildApplyClearBtn {
     return Row(
-      children: const [
+      children: [
         Expanded(
           flex: 139,
           child: AppElevatedBtn(
             text: 'Apply',
+            onPressed: onFilterApplied,
           ),
         ),
-        SizedBox(width: 19),
+        const SizedBox(width: 19),
         Expanded(
           flex: 90,
           child: AppOutlinedBtn(
             text: 'Clear',
+            onPressed: onFilterRemoved,
           ),
         )
       ],

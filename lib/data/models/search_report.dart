@@ -58,6 +58,7 @@ class ReportData {
   final String updated_at;
   final String reportBaseUrl;
   final String categoryName;
+  final DateTime? reportDateTime;
   ReportData({
     required this.id,
     required this.userId,
@@ -72,6 +73,7 @@ class ReportData {
     required this.updated_at,
     required this.reportBaseUrl,
     required this.categoryName,
+    required this.reportDateTime,
   });
 
   Map<String, dynamic> toMap() {
@@ -111,6 +113,7 @@ class ReportData {
           : DateTime.parse(map['updated_at']).format('dd-MM-yyyy'),
       reportBaseUrl: (map['report_base_url'] ?? ''),
       categoryName: (map['name_en'] ?? ''),
+      reportDateTime: DateTime.tryParse(map['report_date']),
     );
   }
 

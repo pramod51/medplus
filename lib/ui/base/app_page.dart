@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/ui/base/app_page_controller.dart';
@@ -206,8 +207,10 @@ class AppPage extends StatelessWidget {
             ),
             buildDivider,
             buildDrawarItem(
+              autoClose: false,
               assets: Assets.ic_language,
-              name: 'Language',
+              name: 'Change to ' +
+                  (SharedConfig.locale!.languageCode == 'en' ? 'AR' : "EN"),
               ontap: _controller.onLanguageClicked,
             ),
             buildDivider,
@@ -253,11 +256,14 @@ class AppPage extends StatelessWidget {
     Color? color,
     double? width,
     double? height,
+    bool autoClose = true,
   }) {
     return GestureDetector(
       onTap: () {
         ontap();
-        closeEndDrawer();
+        if (autoClose) {
+          closeEndDrawer();
+        }
       },
       child: SizedBox(
         height: 50,
