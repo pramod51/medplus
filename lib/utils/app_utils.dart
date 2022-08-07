@@ -124,3 +124,23 @@ extension DateTimeToStringExtension on DateTime {
     return formatter.format(this);
   }
 }
+
+extension StringExtensions on String? {
+  bool get isNullOrEmpty {
+    return this == null || this!.isEmpty;
+  }
+
+  bool get isNotNullOrEmpty {
+    return this != null && this!.isNotEmpty;
+  }
+
+  String _interpolate(String string, List<String> params) {
+    String result = string;
+    for (int i = 1; i < params.length + 1; i++) {
+      result = result.replaceAll('%${i}s', params[i - 1]);
+    }
+    return result;
+  }
+
+  String format(List<String> params) => _interpolate(this!, params);
+}

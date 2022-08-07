@@ -6,6 +6,7 @@ import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/authentication/login/login_page.dart';
 import 'package:medplus/ui/base/add_member_dilog.dart';
 import 'package:medplus/ui/home/home_page.dart';
+import 'package:medplus/ui/home/home_page_controller.dart';
 import 'package:medplus/ui/myAccount/my_account_page.dart';
 import 'package:medplus/ui/reportListing/report_listing.dart';
 import 'package:medplus/ui/search/search_page.dart';
@@ -66,28 +67,25 @@ class AppPageController extends GetxController {
   }
 
   void onLanguageClicked() async {
-    final pref = Get.find<AppPreferences>();
-    if (SharedConfig.locale?.languageCode == 'en') {
-      pref.saveString(AppPreferencesKeys.languageCode, 'ar');
-      pref.saveString(AppPreferencesKeys.countryCode, 'UAE');
+    if (SharedConfig.locale.first == 'en') {
+      SharedConfig.updateLocal('ar', 'UAE');
       await Get.updateLocale(const Locale('ar', 'UAE'));
     } else {
-      pref.saveString(AppPreferencesKeys.languageCode, 'en');
-      pref.saveString(AppPreferencesKeys.countryCode, 'US');
+      SharedConfig.updateLocal('en', 'US');
       await Get.updateLocale(const Locale('en', 'US'));
     }
-    SharedConfig.load(pref);
     Get.back();
+    HomePage.start();
+    Get.find<HomePageController>().fetchData();
     runApp(const RestartWidget());
   }
 
   void onRefAFrdClicked() {}
 
   void onSignOutClicked() async {
-    final code = SharedConfig.callingCountryCode;
-    await Get.find<AppPreferences>().clearAll();
+    Get.find<AppPreferences>().clearAll();
     await Get.deleteAll();
-    LoginPage.start(code);
+    LoginPage.start(SharedConfig.callingCountryCode);
   }
 
   void onTap(int index) {
@@ -178,6 +176,9 @@ class AppPageController extends GetxController {
 
 Tupal<ApiStatus, String> get emptyTuple => Tupal(ApiStatus.EMPTY, "");
 Tupal<ApiStatus, String> get loadingTuple => Tupal(ApiStatus.LOADING, "");
+Tupal<ApiStatus, String> get noDataTuple =>
+    Tupal(ApiStatus.NO_DATA, "No Data Found");
+
 Tupal<ApiStatus, String> get successTuple => Tupal(ApiStatus.SUCCESS, "");
 Tupal<ApiStatus, String> get errorTuple =>
     Tupal(ApiStatus.SERVER_ERROR, "Something went wrong, try again");

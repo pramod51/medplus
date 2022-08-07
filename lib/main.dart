@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       smartManagement: SmartManagement.onlyBuilder,
       translations: AppTranslations.get(),
-      locale: SharedConfig.locale,
+      locale: Locale(SharedConfig.locale.first, SharedConfig.locale.last),
       fallbackLocale: const Locale.fromSubtags(
         languageCode: 'en',
         countryCode: 'US',

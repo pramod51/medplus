@@ -4,8 +4,11 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medplus/data/models/login_response.dart';
+import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/authentication/otp/otp_page.dart';
+import 'package:medplus/ui/edit_profile/edit_profile.dart';
+import 'package:medplus/ui/home/home_page.dart';
 import 'package:medplus/widgets/app_snackbar.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
@@ -13,6 +16,7 @@ class LoginPageController extends GetxController {
   final focusNode = FocusNode();
   final phoneTextEditingController = TextEditingController();
   final googleSignIn = GoogleSignIn();
+  final service = Get.put(ApiService());
   @override
   void onInit() async {
     super.onInit();
@@ -29,18 +33,31 @@ class LoginPageController extends GetxController {
       return;
     }
     showProgress();
-    final service = Get.put(ApiService());
-    final apiResponse = await service.doLogin(phoneTextEditingController.text);
+
+    final apiResponse = await service.doLogin(phoneTextEditingController.text
+        .replaceAll(Get.arguments ?? '', '')
+        .trim());
     if (apiResponse.success) {
       final responseData = LoginResponse.fromMap(apiResponse.data);
-      if (responseData.isValidUser) {
+      if (responseData.isMobileLogin) {
         hideProgress();
+        if (responseData.data == null) return;
         OtpPage.start([
           responseData.otp.toString(),
           responseData.userId,
         ]);
+        SharedConfig.savePhone(responseData.data!.phone);
+        if (responseData.data!.email.isNotEmpty) {
+          SharedConfig.saveEmail(responseData.data!.email);
+        }
+      } else if (responseData.isMobileAndEmailRegisted) {
+        hideProgress();
+        HomePage.start();
       } else {
         hideProgress();
+        Get.offAllNamed(
+          EditProfile.routeName,
+        );
         debugPrint(responseData.msg);
       }
       debugPrint('login Success${responseData.msg}');
@@ -57,14 +74,14 @@ class LoginPageController extends GetxController {
         backgroundColor: Colors.transparent,
         contentPadding: const EdgeInsets.symmetric(horizontal: 24),
         content: Container(
-          color: Colors.transparent,
-          height: 100,
-          width: 100,
-          alignment: Alignment.center,
-          child: const CircularProgressIndicator.adaptive(
-              // valueColor: Animation(),
-              ),
-        ),
+            color: Colors.transparent,
+            height: 100,
+            width: 100,
+            alignment: Alignment.center,
+            child: const CircularProgressIndicator()
+            // valueColor: Animation(),
+
+            ),
       ),
     );
   }
@@ -74,30 +91,14 @@ class LoginPageController extends GetxController {
   }
 
   void onGoogleSIgneInClicked() async {
-    return;
-    try {
-      final facebookLoginResult = await FacebookAuth.instance.login();
-      final userData = await FacebookAuth.instance.getUserData();
-
-      final facebookAuthCredential = FacebookAuthProvider.credential(
-          facebookLoginResult.accessToken!.token);
-      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
-      print(userData);
-    } catch (e) {
-      print(e.toString());
-    }
-
-    return;
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+    if (user != null && user.email != null) {
       print(user.email);
       print('user signed with google');
-      await FirebaseAuth.instance.signOut();
+      loginEmail(user.email!);
       return;
     }
-
     final googleUser = await googleSignIn.signIn();
-
     if (googleUser == null) return;
     print('-------------------------------');
     final googleAuth = await googleUser.authentication;
@@ -106,6 +107,58 @@ class LoginPageController extends GetxController {
       idToken: googleAuth.idToken,
     );
     final user1 = await FirebaseAuth.instance.signInWithCredential(credential);
+    if (FirebaseAuth.instance.currentUser == null) return;
+    loginEmail(FirebaseAuth.instance.currentUser!.email!);
     print(user1.additionalUserInfo?.username);
+  }
+
+  void loginWithFacebook() async {
+    try {
+      final facebookLoginResult = await FacebookAuth.instance.login();
+      final userData = await FacebookAuth.instance.getUserData();
+
+      final facebookAuthCredential = FacebookAuthProvider.credential(
+          facebookLoginResult.accessToken!.token);
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+
+      loginEmail(userData['email']);
+      print(userData);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void loginEmail(String email) async {
+    showProgress();
+    final apiResponse = await service.doLoginWithSocialMedia(email);
+    if (apiResponse.success) {
+      final responseData = LoginResponse.fromMap(apiResponse.data);
+      print(responseData);
+      if (responseData.data == null) {
+        AppSnackBar.onError(responseData.msg);
+        return;
+      }
+      print(responseData.data);
+      debugPrint(responseData.isMobileAndEmailRegisted.toString());
+      if (responseData.data!.email.isNotEmpty) {
+        SharedConfig.savePhone(responseData.data!.phone);
+      }
+      if (responseData.data!.email.isNotEmpty) {
+        SharedConfig.saveEmail(responseData.data!.email);
+      }
+      SharedConfig.saveUserId(responseData.userId);
+      if (responseData.isMobileAndEmailRegisted) {
+        hideProgress();
+        HomePage.start();
+      } else {
+        hideProgress();
+        Get.offAllNamed(EditProfile.routeName);
+        debugPrint(responseData.msg);
+      }
+      debugPrint('login Success${responseData.msg}');
+    } else {
+      hideProgress();
+      debugPrint('login failed');
+    }
   }
 }

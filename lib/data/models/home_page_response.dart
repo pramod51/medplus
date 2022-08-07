@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medplus/data/models/family_response.dart';
 import 'package:medplus/data/models/search_report.dart';
+import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/res/palette.dart';
 
 class HomePageResponse {
@@ -73,10 +74,7 @@ class HomePageData {
               (x) => FamilyData.fromMap(x),
             ),
           ).obs;
-    for (FamilyData f in list) {
-      print(f.name);
-      nameList.add(f.name);
-    }
+
     final catList = map['category'] == null
         ? <Category>[]
         : List<Category>.from(
@@ -194,9 +192,13 @@ class Category {
   factory Category.fromMap(Map<String, dynamic> map) {
     return Category(
       id: (map['id'] ?? 0),
-      name: (map['name_en'] ?? ''),
+      name: SharedConfig.locale.first == 'ar'
+          ? (map['name_ar'] ?? '')
+          : (map['name_en'] ?? ''),
       name_ar: (map['name_ar'] ?? ''),
-      subCategory: (map['sub_category_en'] ?? ''),
+      subCategory: SharedConfig.locale.first == 'ar'
+          ? (map['sub_category_ar'] ?? '')
+          : (map['sub_category_en'] ?? ''),
       sub_category_ar: (map['sub_category_ar'] ?? ''),
       status: (map['status'] ?? 0),
       created_at: (map['created_at'] ?? ''),
@@ -250,7 +252,7 @@ class CategoryResponse {
   String toJson() => json.encode(toMap());
 
   factory CategoryResponse.fromJson(String source) =>
-      CategoryResponse.fromMap(json.decode(source) as Map<String, dynamic>);
+      CategoryResponse.fromMap(json.decode(source));
 
   @override
   String toString() => 'Ajdkjd(status: $status, msg: $msg, data: $data)';

@@ -5,6 +5,7 @@ import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/uploadReport/upload_report_page_controller.dart';
+import 'package:medplus/utils/app_utils.dart';
 import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/simple_chip.dart';
 
@@ -47,7 +48,7 @@ class UploadReport extends AppPage {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${controller.category.name} Suggestions',
+            'cat_suggestions'.tr.format([controller.category.name]),
             style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w700,
@@ -116,14 +117,15 @@ class UploadReport extends AppPage {
     return [
       Row(
         children: [
-          const Text(
-            'Upload record for ',
-            style: TextStyle(
+          Text(
+            'upload_record_for'.tr,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               color: Palette.textLight,
             ),
           ),
+          const SizedBox(width: 3),
           Expanded(
             child: Text(
               controller.familayName,
@@ -139,9 +141,9 @@ class UploadReport extends AppPage {
         ],
       ),
       const SizedBox(height: 11),
-      const Text(
-        'Upload using your camera of add from your Gallery',
-        style: TextStyle(
+      Text(
+        'upload_rec_cam'.tr,
+        style: const TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w400,
           color: Palette.textLight,
@@ -161,9 +163,9 @@ class UploadReport extends AppPage {
               children: [
                 SvgPicture.asset(Assets.ic_camera),
                 const SizedBox(height: 10),
-                const Text(
-                  'Take a Picture',
-                  style: TextStyle(
+                Text(
+                  'take_a_picture'.tr,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Palette.textColor,
@@ -190,9 +192,9 @@ class UploadReport extends AppPage {
               children: [
                 SvgPicture.asset(Assets.ic_folder),
                 const SizedBox(height: 10),
-                const Text(
-                  'Upload Report',
-                  style: TextStyle(
+                Text(
+                  'upload_report'.tr,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
                     color: Palette.textColor,
@@ -210,9 +212,9 @@ class UploadReport extends AppPage {
     return Row(
       children: [
         const SizedBox(width: 25),
-        const Text(
-          'Report Date:',
-          style: TextStyle(
+        Text(
+          'report_date'.tr,
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Palette.textLight,
@@ -243,10 +245,10 @@ class UploadReport extends AppPage {
     return Row(
       children: [
         const SizedBox(width: 24),
-        const Flexible(
+        Flexible(
           child: Text(
-            'Reminder for next Checkup:',
-            style: TextStyle(
+            'reminder_for_next_checkup'.tr,
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Palette.textLight,
@@ -279,7 +281,7 @@ class UploadReport extends AppPage {
       children: [
         AppElevatedBtn(
           width: 140,
-          text: 'Finish',
+          text: 'finish'.tr,
           onPressed: controller.uploadReport,
         ),
       ],

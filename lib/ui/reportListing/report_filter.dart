@@ -80,7 +80,7 @@ class ReportFilter extends StatelessWidget {
 
   Widget get buildSearchBox {
     return InputFormField(
-      hint: 'Search',
+      hint: 'search'.tr,
       prefixIcon: SvgPicture.asset(Assets.ic_search),
       controller: TextEditingController(),
       fillColor: Palette.lightBlueBg,
@@ -89,9 +89,9 @@ class ReportFilter extends StatelessWidget {
 
   List<Widget> get buildCategoryFilter {
     return [
-      const Text(
-        'Category',
-        style: TextStyle(
+      Text(
+        'category'.tr,
+        style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: Palette.textColor,
@@ -118,9 +118,9 @@ class ReportFilter extends StatelessWidget {
 
   List<Widget> get buildSortingFilter {
     return [
-      const Text(
-        'Sorting',
-        style: TextStyle(
+      Text(
+        'sorting'.tr,
+        style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
           color: Palette.textColor,
@@ -129,7 +129,7 @@ class ReportFilter extends StatelessWidget {
       const SizedBox(height: 23),
       AppCheckBox(
         filled: sortFilter == SortFilter.latest,
-        label: 'Latest',
+        label: 'latest'.tr,
         onTap: (val) {
           if (sortFilter == SortFilter.latest) {
             onSortFilterChanged(SortFilter.none);
@@ -141,7 +141,7 @@ class ReportFilter extends StatelessWidget {
       const SizedBox(height: 10),
       AppCheckBox(
         filled: sortFilter == SortFilter.old,
-        label: 'Old',
+        label: 'old'.tr,
         onTap: (val) {
           if (sortFilter == SortFilter.old) {
             onSortFilterChanged(SortFilter.none);
@@ -159,7 +159,7 @@ class ReportFilter extends StatelessWidget {
         Expanded(
           flex: 139,
           child: AppElevatedBtn(
-            text: 'Apply',
+            text: 'apply'.tr,
             onPressed: onFilterApplied,
           ),
         ),
@@ -167,7 +167,7 @@ class ReportFilter extends StatelessWidget {
         Expanded(
           flex: 90,
           child: AppOutlinedBtn(
-            text: 'Clear',
+            text: 'clear'.tr,
             onPressed: onFilterRemoved,
           ),
         )

@@ -67,9 +67,9 @@ class HomePage extends AppPage {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Welcome back',
-          style: TextStyle(
+        Text(
+          'welcome_back'.tr,
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
             color: Palette.secondaryColor,
@@ -115,9 +115,9 @@ class HomePage extends AppPage {
         const SizedBox(width: 24),
         GestureDetector(
           onTap: () => controller.onAddMemberClicked(),
-          child: const Text(
-            '+ Add Member',
-            style: TextStyle(
+          child: Text(
+            'add_new_member'.tr,
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w500,
               color: Palette.textColor,
@@ -227,9 +227,9 @@ class HomePage extends AppPage {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'Your Reports',
-            style: TextStyle(
+          Text(
+            'your_reports'.tr,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w700,
               color: Palette.secondaryColor,
@@ -240,7 +240,7 @@ class HomePage extends AppPage {
             const SizedBox(
               height: 100,
               child: NoDataScreen(
-                message: 'No report found',
+                message: 'no_report_found',
               ),
             ),
           ] else ...[

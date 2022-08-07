@@ -47,10 +47,10 @@ class FamilyResponse {
 class FamilyData {
   final int? id;
   final int user_id;
-  final String relation;
-  final String name;
+  String relation;
+  String name;
   final String phone;
-  final String sex;
+  String sex;
   final int age;
   final int status;
   final String created_at;

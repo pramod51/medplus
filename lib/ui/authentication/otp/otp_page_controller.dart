@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:medplus/data/preferences/app_preferences.dart';
+import 'package:medplus/ui/edit_profile/edit_profile.dart';
 import 'package:medplus/ui/home/home_page.dart';
-import 'package:medplus/widgets/app_snackbar.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 class OtpPageController extends GetxController {
@@ -21,7 +21,6 @@ class OtpPageController extends GetxController {
 
   void initSmsListener() async {
     await SmsAutoFill().listenForCode();
-    AppSnackBar.onSuccess('capturing otp');
   }
 
   void onSubmitClicked() async {
@@ -30,7 +29,11 @@ class OtpPageController extends GetxController {
       appPref.saveInt(AppPreferencesKeys.userId, Get.arguments[1]);
       SharedConfig.load(appPref);
       await Future.delayed(const Duration(milliseconds: 100));
-      HomePage.start();
+      if (SharedConfig.email == null) {
+        Get.offAllNamed(EditProfile.routeName);
+      } else {
+        HomePage.start();
+      }
     }
   }
 

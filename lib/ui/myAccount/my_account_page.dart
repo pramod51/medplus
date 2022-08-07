@@ -26,9 +26,9 @@ class MyAccountPage extends AppPage {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'All My Members ',
-                  style: TextStyle(
+                Text(
+                  'all_my_members'.tr,
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: Palette.textColor,
@@ -53,7 +53,7 @@ class MyAccountPage extends AppPage {
                 const SizedBox(height: 24),
                 Center(
                     child: AppElevatedBtn(
-                  text: '+ Add Member',
+                  text: 'add_new_member'.tr,
                   onPressed: controller.onAddMemberClicked,
                 )),
                 const SizedBox(height: 24),
@@ -71,38 +71,41 @@ class MyAccountPage extends AppPage {
   }
 
   Widget buildMemberList() {
-    if (controller.familyList.isEmpty) {
-      const SizedBox(
-        height: 100,
-        child: NoDataScreen(
-          message: 'No Member found',
-        ),
-      );
-    }
-    return ListView.separated(
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: controller.familyList.length,
-      shrinkWrap: true,
-      itemBuilder: (_, index) {
-        final data = controller.familyList[index];
-        return Container(
-          height: 76,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(5),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF000000).withOpacity(0.05),
-                blurRadius: 5,
-              )
-            ],
+    return Obx(() {
+      final list = controller.homePageController.homePageData!.myFamily;
+      if (list.isEmpty) {
+        return SizedBox(
+          height: 100,
+          child: NoDataScreen(
+            message: 'no_member_found'.tr,
           ),
-          padding: const EdgeInsets.symmetric(horizontal: 9),
-          child: buildMember(data),
         );
-      },
-      separatorBuilder: (_, __) => const SizedBox(height: 16),
-    );
+      }
+      return ListView.separated(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: list.length,
+        shrinkWrap: true,
+        itemBuilder: (_, index) {
+          final data = list[index];
+          return Container(
+            height: 76,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF000000).withOpacity(0.05),
+                  blurRadius: 5,
+                )
+              ],
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 9),
+            child: buildMember(data),
+          );
+        },
+        separatorBuilder: (_, __) => const SizedBox(height: 16),
+      );
+    });
   }
 
   Widget buildMember(FamilyData data) {

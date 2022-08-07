@@ -87,12 +87,12 @@ class OtpPage extends SimpleScaffold {
   }
 
   Widget get buildOtpDesc {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Text(
-        'Enter 4 digit verification code sent to your number',
+        'otp_desc'.tr,
         textAlign: TextAlign.center,
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 20,
           height: 3 / 2,
           color: Colors.white,
@@ -129,7 +129,7 @@ class OtpPage extends SimpleScaffold {
       width: 150,
       onPressed: controller.onSubmitClicked,
       borderRadius: 245,
-      text: 'Submit',
+      text: 'submit'.tr,
       color: Palette.lightBgColor,
       textColor: Palette.textColor,
     );

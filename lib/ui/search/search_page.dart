@@ -81,7 +81,7 @@ class SearchPage extends AppPage {
         height: 20,
         width: 20,
       ),
-      hint: 'Enter keyword',
+      hint: 'enter_keyword'.tr,
       fillColor: Colors.white,
     );
   }
@@ -90,9 +90,9 @@ class SearchPage extends AppPage {
     final list = SharedConfig.subCategory ?? <String>[];
     if (list.isEmpty) return [const SizedBox.shrink()];
     return [
-      const Text(
-        'Suggestions',
-        style: TextStyle(
+      Text(
+        'suggestions'.tr,
+        style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w700,
           letterSpacing: 0.2,
@@ -126,9 +126,9 @@ class SearchPage extends AppPage {
 
   List<Widget> buildAllResults() {
     return [
-      const Text(
-        'All Results',
-        style: TextStyle(
+      Text(
+        'all_results'.tr,
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w500,
           color: Palette.textColor,
@@ -141,10 +141,10 @@ class SearchPage extends AppPage {
       ),
       const SizedBox(height: 19),
       if (controller.data.isEmpty) ...[
-        const SizedBox(
+        SizedBox(
           height: 100,
           child: NoDataScreen(
-            message: 'No result found',
+            message: 'no_result_found'.tr,
           ),
         ),
       ] else ...[
@@ -160,7 +160,7 @@ class SearchPage extends AppPage {
                   data: data,
                   userName: controller.familyNameMap[data.familyId] ??
                       SharedConfig.name ??
-                      'No name',
+                      '',
                 );
               },
               separatorBuilder: (_, __) => const SizedBox(height: 16),

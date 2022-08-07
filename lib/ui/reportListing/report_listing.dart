@@ -39,8 +39,10 @@ class ReportListing extends AppPage {
               ],
             ),
           );
-        } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+        } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR ||
+            controller.apiTupal.value.item1 == ApiStatus.NO_DATA) {
           return ErrorScreen(
+            message: controller.apiTupal.value.item2,
             onTryAgain: controller.fetchFamilyReport,
           );
         }
@@ -94,9 +96,9 @@ class ReportListing extends AppPage {
   Widget get buildAllReportListHeader {
     return Row(
       children: [
-        const Text(
-          'All Reports',
-          style: TextStyle(
+        Text(
+          'all_reports'.tr,
+          style: const TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w700,
             color: Palette.textColor,
@@ -114,10 +116,10 @@ class ReportListing extends AppPage {
   Widget buildReportList() {
     if (controller.reportApiTupal.value.item1 == ApiStatus.SUCCESS) {
       if (controller.familyList.isEmpty) {
-        return const SizedBox(
+        return SizedBox(
           height: 100,
           child: NoDataScreen(
-            message: 'No Report found',
+            message: 'no_report_found'.tr,
           ),
         );
       }

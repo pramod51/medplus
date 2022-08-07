@@ -3,6 +3,7 @@ import 'package:medplus/ui/authentication/login/login_page.dart';
 import 'package:medplus/ui/authentication/login/login_page_controller.dart';
 import 'package:medplus/ui/authentication/otp/otp_page.dart';
 import 'package:medplus/ui/authentication/otp/otp_page_controller.dart';
+import 'package:medplus/ui/edit_profile/edit_profile.dart';
 import 'package:medplus/ui/home/home_page.dart';
 import 'package:medplus/ui/myAccount/my_account_page.dart';
 import 'package:medplus/ui/myAccount/my_account_page_controller.dart';
@@ -91,6 +92,14 @@ class Routes {
           () {
             Get.create(() => MyAccountPageController());
           },
+        ),
+        transition: Transition.noTransition,
+      ),
+      GetPage(
+        name: EditProfile.routeName,
+        page: () => EditProfile(),
+        binding: BindingsBuilder(
+          () {},
         ),
         transition: Transition.noTransition,
       ),

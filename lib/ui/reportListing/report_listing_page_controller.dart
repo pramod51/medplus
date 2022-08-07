@@ -42,12 +42,12 @@ class ReportListingPageController extends GetxController {
       final responseData = FamilyResponse.fromMap(apiResponse.data);
       familyList.assignAll(responseData.data);
       if (familyList.isEmpty) {
-        apiTupal.value = successTuple;
+        apiTupal.value = noDataTuple;
         return;
       }
       familyList[0].isSelected = true;
       fetchFamilyReport();
-      debugPrint('Family data Success${responseData.msg}');
+      debugPrint('Family data Success${responseData.data}+ ');
     } else {
       apiTupal.value = errorTuple;
     }

@@ -28,6 +28,35 @@ class ApiService {
       '$baseUrl/api/v1/get_challenge',
       makePalyload({
         "phone": '9628742706',
+        'ccc': SharedConfig.callingCountryCode,
+        'cc': SharedConfig.countryCode,
+      }),
+    );
+  }
+
+  Future<ApiResponse> doLoginWithSocialMedia(String email) {
+    return client.post(
+      '$baseUrl/api/v1/get_challenge',
+      makePalyload({
+        "email": email,
+      }),
+    );
+  }
+
+  Future<ApiResponse> updateUserDetails(
+    String name,
+    String? phone,
+    String? email,
+  ) {
+    return client.post(
+      '$baseUrl/api/v1/update_user',
+      makePalyload({
+        "user_id": SharedConfig.userId,
+        "name": name,
+        if (SharedConfig.email!.isEmpty) "email": email,
+        if (SharedConfig.phone!.isEmpty) "phone": phone,
+        "cc": SharedConfig.countryCode,
+        "ccc": SharedConfig.callingCountryCode,
       }),
     );
   }

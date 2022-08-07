@@ -97,7 +97,7 @@ class AppPage extends StatelessWidget {
     bool isSelected = false,
   }) {
     return BottomNavigationBarItem(
-      label: 'kkg',
+      label: '',
       backgroundColor: Colors.transparent,
       icon: Container(
         height: 60,
@@ -161,8 +161,11 @@ class AppPage extends StatelessWidget {
 
   Widget get buildBackButton => IconButton(
         onPressed: () => _controller.onBackButtonClicked(),
-        icon: SvgPicture.asset(
-          Assets.ic_arrow_right,
+        icon: RotatedBox(
+          quarterTurns: SharedConfig.textDirection == TextDirection.rtl ? 2 : 0,
+          child: SvgPicture.asset(
+            Assets.ic_arrow_right,
+          ),
         ),
         splashRadius: 20,
       );
@@ -178,7 +181,7 @@ class AppPage extends StatelessWidget {
             buildDivider,
             buildDrawarItem(
               assets: Assets.ic_my_account,
-              name: 'My Account',
+              name: 'my_account'.tr,
               ontap: _controller.onMyAccountClicked,
               color: Palette.textColor,
               width: 24,
@@ -187,7 +190,7 @@ class AppPage extends StatelessWidget {
             buildDivider,
             buildDrawarItem(
               assets: Assets.ic_doc,
-              name: 'All Reports',
+              name: 'all_reports'.tr,
               ontap: _controller.onAllReportsClicked,
               color: Palette.textColor,
               width: 24,
@@ -196,33 +199,33 @@ class AppPage extends StatelessWidget {
             buildDivider,
             buildDrawarItem(
               assets: Assets.ic_add_member,
-              name: 'Add Member',
+              name: 'add_member'.tr,
               ontap: _controller.onAddMemberClicked,
             ),
             buildDivider,
             buildDrawarItem(
               assets: Assets.ic_my_members,
-              name: 'My Members',
+              name: 'my_members'.tr,
               ontap: _controller.onMyMemberClicked,
             ),
             buildDivider,
             buildDrawarItem(
               autoClose: false,
               assets: Assets.ic_language,
-              name: 'Change to ' +
-                  (SharedConfig.locale!.languageCode == 'en' ? 'AR' : "EN"),
+              name: 'change_to'.tr +
+                  (SharedConfig.locale.first == 'en' ? 'AR' : "EN"),
               ontap: _controller.onLanguageClicked,
             ),
             buildDivider,
             buildDrawarItem(
               assets: Assets.ic_refer_a_frd,
-              name: 'Refer a Friend',
+              name: 'refer_a_friend'.tr,
               ontap: _controller.onRefAFrdClicked,
             ),
             buildDivider,
             buildDrawarItem(
               assets: Assets.ic_sign_out,
-              name: 'Sign Out',
+              name: 'sign_out'.tr,
               ontap: _controller.onSignOutClicked,
             ),
             buildDivider,
