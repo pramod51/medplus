@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:medplus/data/models/family_response.dart';
 import 'package:medplus/data/models/search_report.dart';
 import 'package:medplus/data/preferences/app_preferences.dart';
+import 'package:medplus/services/api_response.dart';
 import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/base/app_page_controller.dart';
 
@@ -26,15 +27,8 @@ class SearchPageController extends GetxController {
     super.onInit();
     fetchFamily();
     textEditingController.addListener(() async {
-      await Future.delayed(const Duration(milliseconds: 500));
-      // calcelToken.cancel();
-
+      // await Future.delayed(const Duration(milliseconds: 500));
       final isSucess = await search();
-      if (isSucess) {
-        apiTupal.value = successTuple;
-      } else {
-        apiTupal.value = errorTuple;
-      }
     });
   }
 
@@ -50,16 +44,19 @@ class SearchPageController extends GetxController {
     if (familyNameMap.isEmpty) {
       await fetchFamily();
     }
-    cancelToken?.cancel("fetching contacts");
+    cancelToken?.cancel("fetching reports");
     cancelToken = CancelToken();
     final apiResponse =
         await service.searchReport(textEditingController.text, cancelToken);
     if (apiResponse.success) {
       final responseData = SearchReportResponse.fromMap(apiResponse.data);
-      apiTupal.value = successTuple;
+
       data.assignAll(responseData.data);
       debugPrint('Serach Success${responseData.msg}');
+      apiTupal.value = successTuple;
       return true;
+    } else if (apiResponse.status == ApiStatus.CANCELED) {
+      apiTupal.value = loadingTuple;
     } else {
       apiTupal.value = errorTuple;
     }

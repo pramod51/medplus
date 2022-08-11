@@ -47,6 +47,9 @@ class DioClient {
     } catch (error) {
       debugPrint("DioClient, post() -> catch");
       debugPrint(error.toString());
+      if (error is DioError && error.type == DioErrorType.cancel) {
+        return ApiResponse.error(status: ApiStatus.CANCELED);
+      }
       return ApiResponse.error(status: ApiStatus.SERVER_ERROR);
     } // end of catch block
   }

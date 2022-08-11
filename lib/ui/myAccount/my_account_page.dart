@@ -90,15 +90,9 @@ class MyAccountPage extends AppPage {
           return Container(
             height: 76,
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF000000).withOpacity(0.05),
-                  blurRadius: 5,
-                )
-              ],
-            ),
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(5),
+                border: Border.all(color: Palette.borderColor)),
             padding: const EdgeInsets.symmetric(horizontal: 9),
             child: buildMember(data),
           );
@@ -123,6 +117,7 @@ class MyAccountPage extends AppPage {
         ),
         const SizedBox(height: 8),
         const Divider(
+          thickness: 1,
           height: 0,
           color: Palette.lightBgColor,
         ),

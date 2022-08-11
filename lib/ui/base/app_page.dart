@@ -23,7 +23,7 @@ class AppPage extends StatelessWidget {
           drawer: drawer,
           endDrawer: endDrawer,
           bottomNavigationBar: bottomNavigationBar,
-          backgroundColor: Palette.lightBlueBg,
+          backgroundColor: Colors.white,
           body: scaffoldBody,
         ));
   }
@@ -51,7 +51,7 @@ class AppPage extends StatelessWidget {
         height: Platform.isIOS ? 125 : 95,
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Palette.primaryColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(30),
             topRight: Radius.circular(30),
@@ -104,11 +104,11 @@ class AppPage extends StatelessWidget {
         width: 60,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: isSelected ? Palette.primaryColor : Colors.white,
+            color: !isSelected ? Palette.primaryColor : Colors.white,
             shape: BoxShape.circle),
         child: SvgPicture.asset(
           assetsPath,
-          color: isSelected ? Colors.white : Palette.textColor,
+          color: !isSelected ? Colors.white : Palette.primaryColor,
         ),
       ),
     );

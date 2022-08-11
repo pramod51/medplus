@@ -176,6 +176,8 @@ class AppPageController extends GetxController {
 
 Tupal<ApiStatus, String> get emptyTuple => Tupal(ApiStatus.EMPTY, "");
 Tupal<ApiStatus, String> get loadingTuple => Tupal(ApiStatus.LOADING, "");
+Tupal<ApiStatus, String> get cancelledTuple => Tupal(ApiStatus.CANCELED, "");
+
 Tupal<ApiStatus, String> get noDataTuple =>
     Tupal(ApiStatus.NO_DATA, "No Data Found");
 

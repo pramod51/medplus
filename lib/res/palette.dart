@@ -23,7 +23,7 @@ class Palette {
   static const Color lightBlueBg = Color(0xFFF0F9FF);
   static const Color e3e6ff = Color(0xFFE3E6FF);
   static const Color col7166F9 = Color(0xFF7166F9);
-  // static const Color  = Color(0xFF);
+  static const Color borderColor = Color(0xffD7D7D7);
   // static const Color  = Color(0xFF);
 
   static MaterialColor createMaterialColor(Color color) {

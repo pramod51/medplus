@@ -295,14 +295,8 @@ class UploadReport extends AppPage {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xff2B63CF).withOpacity(0.2),
-              blurRadius: 40,
-              offset: const Offset(0, 0),
-            ),
-          ],
-          color: Colors.white,
+          border: Border.all(color: Palette.borderColor),
+          color: Palette.lightBlueBg,
         ),
         padding: padding,
         child: child);

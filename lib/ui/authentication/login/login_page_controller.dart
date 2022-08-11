@@ -17,9 +17,11 @@ class LoginPageController extends GetxController {
   final phoneTextEditingController = TextEditingController();
   final googleSignIn = GoogleSignIn();
   final service = Get.put(ApiService());
+  String cc = '';
   @override
   void onInit() async {
     super.onInit();
+    cc = Get.arguments;
     phoneTextEditingController.text = Get.arguments;
   }
 
@@ -34,31 +36,29 @@ class LoginPageController extends GetxController {
     }
     showProgress();
 
-    final apiResponse = await service.doLogin(phoneTextEditingController.text
-        .replaceAll(Get.arguments ?? '', '')
-        .trim());
+    final apiResponse = await service
+        .doLogin(phoneTextEditingController.text.replaceAll((cc), '').trim());
     if (apiResponse.success) {
       final responseData = LoginResponse.fromMap(apiResponse.data);
+      print(Get.arguments);
+      print(responseData.data);
+      if (responseData.data == null) {
+        AppSnackBar.onError(responseData.msg);
+        return;
+      }
       if (responseData.isMobileLogin) {
         hideProgress();
-        if (responseData.data == null) return;
-        OtpPage.start([
-          responseData.otp.toString(),
-          responseData.userId,
-        ]);
         SharedConfig.savePhone(responseData.data!.phone);
         if (responseData.data!.email.isNotEmpty) {
           SharedConfig.saveEmail(responseData.data!.email);
         }
+        OtpPage.start([
+          responseData.otp.toString(),
+          responseData.userId,
+        ]);
       } else if (responseData.isMobileAndEmailRegisted) {
         hideProgress();
         HomePage.start();
-      } else {
-        hideProgress();
-        Get.offAllNamed(
-          EditProfile.routeName,
-        );
-        debugPrint(responseData.msg);
       }
       debugPrint('login Success${responseData.msg}');
     } else {

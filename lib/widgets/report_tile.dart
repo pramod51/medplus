@@ -25,13 +25,8 @@ class ReportTile extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 5,
-          ),
-        ],
+        color: Palette.lightBlueBg,
+        border: Border.all(color: Palette.borderColor),
       ),
       child: Column(
         children: [
@@ -48,7 +43,8 @@ class ReportTile extends StatelessWidget {
           ),
           const Divider(
             height: 0,
-            color: Color(0xffF8F8F8),
+            thickness: 1,
+            color: Palette.borderColor,
           ),
           Container(
             height: 58,

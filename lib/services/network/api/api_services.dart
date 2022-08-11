@@ -27,7 +27,7 @@ class ApiService {
     return client.post(
       '$baseUrl/api/v1/get_challenge',
       makePalyload({
-        "phone": '9628742706',
+        "phone": phone,
         'ccc': SharedConfig.callingCountryCode,
         'cc': SharedConfig.countryCode,
       }),

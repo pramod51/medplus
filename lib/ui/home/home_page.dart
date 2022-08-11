@@ -246,6 +246,7 @@ class HomePage extends AppPage {
           ] else ...[
             ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
               itemCount: controller.homePageData!.yourReport.length,
               shrinkWrap: true,
               itemBuilder: (_, index) {
@@ -256,7 +257,7 @@ class HomePage extends AppPage {
               separatorBuilder: (_, __) => const SizedBox(
                 height: 10,
               ),
-            )
+            ),
           ]
         ],
       ),
