@@ -67,7 +67,7 @@ class UploadReportPageController extends GetxController {
 
   void uploadReport() async {
     if (file == null || file?.path == null) {
-      AppSnackBar.onSuccess('Please upload your report');
+      AppSnackBar.onError('Please add report file');
       return;
     }
     print(file?.path);
@@ -98,12 +98,11 @@ class UploadReportPageController extends GetxController {
       hideProgress();
       AppSnackBar.onError('Failed to upload, try again');
     }
-
-    // print(service.httpStatusCode);
   }
 
   void takePicture() async {
-    await AppUtils.hasAcceptedPermissions();
+    final isAccepted = await AppUtils.hasAcceptedPermissions();
+    if (!isAccepted) return;
     final ImagePicker _picker = ImagePicker();
     final imageFile = await _picker.pickImage(
       source: ImageSource.camera,
@@ -121,9 +120,7 @@ class UploadReportPageController extends GetxController {
       );
     }));
 
-    final savedPath = await AppUtils.reportsDirPath(
-        fileName: 'fileName', reportId: 'reportId');
-
+    final savedPath = await AppUtils.reportsDirPath(fileName: familayName);
     file = await saveDocument(path: savedPath, pdf: pdf);
     if (file == null) {
       print('file not saved');

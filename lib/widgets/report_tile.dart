@@ -135,6 +135,8 @@ class ReportTile extends StatelessWidget {
           final file = await getFileFromLocal();
           if (file != null) {
             OpenFile.open(file.path);
+          } else {
+            AppSnackBar.onError('Unabel to open, try again');
           }
         },
         child: SvgPicture.asset(
@@ -150,6 +152,8 @@ class ReportTile extends StatelessWidget {
           final file = await getFileFromLocal();
           if (file != null) {
             AppUtils.shareFile(file);
+          } else {
+            AppSnackBar.onError('Unabel to share, try again');
           }
         },
         child: SvgPicture.asset(Assets.ic_share),
@@ -160,6 +164,8 @@ class ReportTile extends StatelessWidget {
           if (await getFileFromLocal() != null) {
             AppSnackBar.onSuccess(
                 'Yor repost downloaded inside Medplus folder');
+          } else {
+            AppSnackBar.onError('Unabel to download, try again');
           }
         },
         child: SvgPicture.asset(Assets.ic_download),
@@ -171,18 +177,17 @@ class ReportTile extends StatelessWidget {
     final b = await AppUtils.hasAcceptedPermissions();
     if (!b) return null;
     final saveedPath = await AppUtils.reportsDirPath(
-        fileName: userName + ' ' + data.categoryName,
+        fileName: userName + ' ' + data.categoryName + ' ',
         reportId: data.id.toString());
-
     File f = File(saveedPath);
     if (await f.exists()) {
       print('its there');
       return f;
     } else {
       final f = await Get.put(ApiService()).downloadReport(
-          'https://www.clickdimensions.com/links/TestPDFfile.pdf',
-          userName + ' ' + data.categoryName,
-          data.id);
+        ('https://medical.techmeguru.com/uploads/documents' + data.reportUrl),
+        saveedPath,
+      );
       return f;
     }
   }

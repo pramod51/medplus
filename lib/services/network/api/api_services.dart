@@ -5,7 +5,6 @@ import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/services/api_response.dart';
 import 'package:medplus/services/network/dio_client.dart';
 import 'package:medplus/utils/app_utils.dart';
-import 'package:path_provider/path_provider.dart';
 
 class ApiService {
   final DioClient client = DioClient.getInstance();
@@ -73,9 +72,7 @@ class ApiService {
   Future<ApiResponse> fetchCategories() {
     return client.post(
       '$baseUrl/api/v1/get_category',
-      makePalyload({
-        "user_id": SharedConfig.userId,
-      }),
+      makePalyload(),
     );
   }
 
@@ -108,26 +105,21 @@ class ApiService {
     print(progress);
   }
 
-  Future<File?> downloadReport(String url, String name, int id) async {
-    final dir = Platform.isAndroid
-        ? await getExternalStorageDirectory()
-        : await getApplicationDocumentsDirectory();
-
-    final savePath = Platform.isAndroid
-        ? '/storage/emulated/0/Medplus/$name Report $id.pdf'
-        : ('${dir?.path}/$name Report $id.pdf');
-
-    print(savePath);
-    await client.download(
-      url,
-      savePath,
-      onReceiveProgress: (received, total) {
-        if (total != -1) {
-          print((received / total * 100).toStringAsFixed(0) + "%");
-        }
-      },
-    );
-    return File(savePath);
+  Future<File?> downloadReport(String url, String savePath) async {
+    try {
+      final responseData = await client.download(
+        url,
+        savePath,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            print((received / total * 100).toStringAsFixed(0) + "%");
+          }
+        },
+      );
+      return responseData;
+    } catch (e) {
+      return null;
+    }
   }
 
   Future<ApiResponse> searchReport(String query, CancelToken? cancelToken) {

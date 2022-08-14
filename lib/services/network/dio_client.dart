@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medplus/services/api_response.dart';
@@ -111,27 +113,29 @@ class DioClient {
     }
   }
 
-  Future<void> download(
+  Future<File?> download(
     String url,
     String savePath, {
     Function(int received, int total)? onReceiveProgress,
   }) async {
-    //   if (total != -1) {
-    //  print((received / total * 100).toStringAsFixed(0) + "%");
-    // }
+    print('-----------------------------------');
+    print(url);
+    print('-----------------------------------');
     try {
       final response = await _dio.download(
         url,
         savePath,
         onReceiveProgress: onReceiveProgress,
+        cancelToken: CancelToken(),
       );
-      // File file = File(savePath);
-      // var raf = file.openSync(mode: FileMode.write);
-      // raf.writeFromSync(response.data);
-      // await raf.close();
-
+      if (response.statusCode == 200) {
+        return File(savePath);
+      } else {
+        return null;
+      }
     } catch (e) {
       print(e.toString());
+      return null;
     }
   }
 }

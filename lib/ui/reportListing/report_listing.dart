@@ -66,9 +66,15 @@ class ReportListing extends AppPage {
                 height: 76,
                 width: 73,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: data.isSelected ? Palette.primaryColor : Colors.white,
-                ),
+                    borderRadius: BorderRadius.circular(20),
+                    color:
+                        data.isSelected ? Palette.primaryColor : Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xff666666).withOpacity(0.20),
+                        blurRadius: 40,
+                      )
+                    ]),
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 alignment: Alignment.center,
                 child: Text(

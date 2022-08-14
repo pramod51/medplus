@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -15,19 +14,27 @@ class AppUtils {
   }
 
   static Future<bool> hasAcceptedPermissions() async {
+    print('------------------------');
+    print(await Permission.camera.status.isGranted);
+    print(await Permission.storage.status.isGranted);
+    print(await Permission.accessMediaLocation.status.isGranted);
+    print('------------------------');
+
     if (Platform.isAndroid) {
-      if (await _requestPermission(Permission.storage) &&
-          // access media location needed for android 10/Q
-          await _requestPermission(Permission.accessMediaLocation) &&
+      if (await requestPermission(Permission.camera) &&
+              await requestPermission(Permission.storage) &&
+              await requestPermission(Permission.accessMediaLocation)
           // manage external storage needed for android 11/R
-          await _requestPermission(Permission.manageExternalStorage)) {
+          // await requestPermission(Permission.manageExternalStorage)
+          ) {
         return true;
       } else {
         return false;
       }
     }
     if (Platform.isIOS) {
-      if (await _requestPermission(Permission.storage)) {
+      if (await requestPermission(Permission.storage) &&
+          await requestPermission(Permission.photos)) {
         return true;
       } else {
         return false;
@@ -38,13 +45,13 @@ class AppUtils {
     }
   }
 
-  static Future<bool> _requestPermission(Permission permission) async {
+  static Future<bool> requestPermission(Permission permission) async {
     final req = await permission.request();
     return req.isGranted;
   }
 
   static Future<String> reportsDirPath(
-      {required String fileName, required String reportId}) async {
+      {required String fileName, String reportId = ''}) async {
     await hasAcceptedPermissions();
     final dir = Platform.isAndroid
         ? await getExternalStorageDirectory()
@@ -52,6 +59,16 @@ class AppUtils {
     final path = Platform.isAndroid
         ? '/storage/emulated/0/Medplus/$fileName Report $reportId.pdf'
         : ('${dir?.path}/$fileName Report $reportId.pdf');
+    if (Platform.isAndroid) {
+      if (!await Directory('/storage/emulated/0/Medplus').exists()) {
+        Directory('/storage/emulated/0/Medplus').create();
+      }
+    }
+    // else {
+    //   if (!await Directory('${dir!.path}/Medplus').exists()) {
+    //     Directory('${dir.path}/Medplus').create();
+    //   }
+    // }
     return path;
   }
 
