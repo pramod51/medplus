@@ -12,6 +12,7 @@ import 'package:medplus/utils/app_utils.dart';
 import 'package:medplus/widgets/app_snackbar.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UploadReportPageController extends GetxController {
   final reportDate = ''.obs;
@@ -101,7 +102,7 @@ class UploadReportPageController extends GetxController {
   }
 
   void takePicture() async {
-    final isAccepted = await AppUtils.hasAcceptedPermissions();
+    final isAccepted = await AppUtils.requestPermission(Permission.camera);
     if (!isAccepted) return;
     final ImagePicker _picker = ImagePicker();
     final imageFile = await _picker.pickImage(
@@ -128,6 +129,9 @@ class UploadReportPageController extends GetxController {
   }
 
   void pickDocument() async {
+    final isAccepted = await AppUtils.hasAcceptedPermissions();
+    print(isAccepted.toString() + 'kdn');
+    if (!isAccepted) return;
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowMultiple: true,
@@ -135,12 +139,13 @@ class UploadReportPageController extends GetxController {
     );
     final pdf = pw.Document();
     final savePath = await AppUtils.reportsDirPath(
-        fileName: 'fileName', reportId: 'reportId');
+      fileName: familayName + category.name,
+    );
     if (result != null) {
       for (int i = 0; i < result.files.length; i++) {
         if (result.files[i].path!.isPDFFileName) {
           file = File(result.files[i].path!);
-
+          await file?.copy(savePath);
           return;
         }
         final image = pw.MemoryImage(
@@ -153,8 +158,10 @@ class UploadReportPageController extends GetxController {
           );
         }));
       }
+
       file = await saveDocument(path: savePath, pdf: pdf);
     } else {
+      print('User canceled the picker');
       // User canceled the picker
     }
   }
@@ -167,6 +174,7 @@ class UploadReportPageController extends GetxController {
     try {
       final file = File(path);
       file.writeAsBytesSync(bytes);
+
       return file;
     } catch (e) {
       print(e);

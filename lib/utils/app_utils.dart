@@ -14,13 +14,12 @@ class AppUtils {
   }
 
   static Future<bool> hasAcceptedPermissions() async {
-    print('------------------------');
-    print(await Permission.camera.status.isGranted);
-    print(await Permission.storage.status.isGranted);
-    print(await Permission.accessMediaLocation.status.isGranted);
-    print('------------------------');
-
     if (Platform.isAndroid) {
+      print('------------------------');
+      print(await Permission.camera.status.isGranted);
+      print(await Permission.storage.status.isGranted);
+      print(await Permission.accessMediaLocation.status.isGranted);
+      print('------------------------');
       if (await requestPermission(Permission.camera) &&
               await requestPermission(Permission.storage) &&
               await requestPermission(Permission.accessMediaLocation)
@@ -33,8 +32,13 @@ class AppUtils {
       }
     }
     if (Platform.isIOS) {
-      if (await requestPermission(Permission.storage) &&
-          await requestPermission(Permission.photos)) {
+      print('------------------------');
+      print(await Permission.camera.status.isGranted);
+      print(await Permission.storage.status.isGranted);
+      print(await Permission.photos.status.isGranted);
+      print('------------------------');
+      if (await requestPermission(Permission.photos) &&
+          await requestPermission(Permission.storage)) {
         return true;
       } else {
         return false;
