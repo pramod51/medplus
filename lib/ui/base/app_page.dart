@@ -124,10 +124,11 @@ class AppPage extends StatelessWidget {
           child: ScrollConfiguration(
             behavior: ScrollConfiguration.of(Get.context!)
                 .copyWith(scrollbars: false),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: body,
-            ),
+            child: nonScroableBody ??
+                SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: body,
+                ),
           ),
         ),
       ],
@@ -135,6 +136,8 @@ class AppPage extends StatelessWidget {
   }
 
   Widget get body => Container();
+
+  Widget? get nonScroableBody => null;
 
   Widget get appBar => SizedBox(
         height: 48,

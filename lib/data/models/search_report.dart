@@ -45,10 +45,10 @@ class SearchReportResponse {
 }
 
 class ReportData {
-  final int id;
-  final int userId;
-  final int familyId;
-  final int categoryId;
+  final String id;
+  final String userId;
+  final String familyId;
+  final String categoryId;
   final String subCategoryKey;
   final String reportUrl;
   final String reportDate;
@@ -57,7 +57,7 @@ class ReportData {
   final String created_at;
   final String updated_at;
   final String reportBaseUrl;
-  final String categoryName;
+  String categoryName;
   final DateTime? reportDateTime;
   ReportData({
     required this.id,
@@ -96,10 +96,10 @@ class ReportData {
 
   factory ReportData.fromMap(Map<String, dynamic> map) {
     return ReportData(
-      id: (map['id'] ?? 0),
-      userId: (map['user_id'] ?? 0),
-      familyId: (map['family_id'] ?? 0),
-      categoryId: (map['category_id'] ?? 0),
+      id: (map['id']?.toString() ?? ""),
+      userId: (map['user_id']?.toString() ?? ""),
+      familyId: (map['family_id']?.toString() ?? ""),
+      categoryId: (map['category_id']?.toString() ?? ""),
       subCategoryKey: (map['sub_category_key'] ?? ''),
       reportUrl: (map['report_url'] ?? ''),
       reportDate: map['report_date'] == null
@@ -124,6 +124,6 @@ class ReportData {
 
   @override
   String toString() {
-    return 'Data(id: $id, user_id: $userId, family_id: $familyId, category_id: $categoryId, sub_category_key: $subCategoryKey, reports: $reportUrl, report_date: $reportDate, next_checkup_date: $next_checkup_date, status: $status, created_at: $created_at, updated_at: $updated_at, report_base_url: $reportBaseUrl, name_en: $categoryName)';
+    return 'Data(id: $id, , family_id: $familyId, category_id: $categoryId, sub_category_key: $subCategoryKey, reports: $reportUrl, report_date: $reportDate, next_checkup_date: $next_checkup_date, status: $status, created_at: $created_at, updated_at: $updated_at, report_base_url: $reportBaseUrl, name_en: $categoryName)';
   }
 }

@@ -78,7 +78,7 @@ class ReportListingPageController extends GetxController {
   }
 
   void categoryFilter() {
-    if (category.where((element) => element.isSelected).isEmpty) {
+    if (category.where((element) => element.isSelected.value).isEmpty) {
       data.assignAll(allData);
       sortFilter();
       return;
@@ -90,7 +90,7 @@ class ReportListingPageController extends GetxController {
 
   void sortFilter() {
     switch (sorting.value) {
-      case SortFilter.latest:
+      case SortFilter.old:
         data.sort((a, b) {
           if (a.reportDateTime == null) return 1;
           if (b.reportDateTime == null) return -1;
@@ -99,7 +99,7 @@ class ReportListingPageController extends GetxController {
           return 0;
         });
         break;
-      case SortFilter.old:
+      case SortFilter.latest:
         data.sort((a, b) {
           if (a.reportDateTime == null) return 1;
           if (b.reportDateTime == null) return -1;
@@ -119,7 +119,7 @@ class ReportListingPageController extends GetxController {
 
   bool isCategoryAvail(String name) {
     for (var element in category) {
-      if (name == element.name && element.isSelected) return true;
+      if (name == element.name && element.isSelected.value) return true;
     }
     return false;
   }
@@ -127,13 +127,20 @@ class ReportListingPageController extends GetxController {
   void onFilterRemoved() {
     sorting.value = SortFilter.none;
     for (var element in category) {
-      element.isSelected = false;
+      element.isSelected.value = false;
     }
+    data.assignAll(allData);
     Get.back();
   }
 
   void onSortChanges(SortFilter sortFilter) {
     sorting.value = sortFilter;
     print(sortFilter);
+  }
+
+  Future<void> onRefresh() async {
+    print('object');
+    fetchFamilyReport();
+    return;
   }
 }

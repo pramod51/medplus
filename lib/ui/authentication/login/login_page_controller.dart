@@ -17,12 +17,11 @@ class LoginPageController extends GetxController {
   final phoneTextEditingController = TextEditingController();
   final googleSignIn = GoogleSignIn();
   final service = Get.put(ApiService());
-  String cc = '';
+
   @override
   void onInit() async {
     super.onInit();
-    cc = Get.arguments;
-    phoneTextEditingController.text = Get.arguments;
+    phoneTextEditingController.text = SharedConfig.callingCountryCode ?? '';
   }
 
   void onLoginClicked() async {
@@ -36,8 +35,9 @@ class LoginPageController extends GetxController {
     }
     showProgress();
 
-    final apiResponse = await service
-        .doLogin(phoneTextEditingController.text.replaceAll((cc), '').trim());
+    final apiResponse = await service.doLogin(phoneTextEditingController.text
+        .replaceAll((SharedConfig.callingCountryCode ?? ''), '')
+        .trim());
     if (apiResponse.success) {
       final responseData = LoginResponse.fromMap(apiResponse.data);
       print(Get.arguments);

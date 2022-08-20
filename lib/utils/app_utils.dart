@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:device_info/device_info.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -16,19 +17,33 @@ class AppUtils {
   static Future<bool> hasAcceptedPermissions() async {
     if (Platform.isAndroid) {
       print('------------------------');
-      print(await Permission.camera.status.isGranted);
-      print(await Permission.storage.status.isGranted);
-      print(await Permission.accessMediaLocation.status.isGranted);
+      print(await Permission.camera.status);
+      print(await Permission.storage.status);
+      print(await Permission.accessMediaLocation.status);
+      print(await Permission.manageExternalStorage.status);
+
       print('------------------------');
-      if (await requestPermission(Permission.camera) &&
-              await requestPermission(Permission.storage) &&
-              await requestPermission(Permission.accessMediaLocation)
-          // manage external storage needed for android 11/R
-          // await requestPermission(Permission.manageExternalStorage)
-          ) {
-        return true;
+      DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+      final androidInfo = await deviceInfoPlugin.androidInfo;
+      final apiLevel = androidInfo.version.sdkInt;
+      if (apiLevel > 29) {
+        if (await requestPermission(Permission.camera) &&
+            await requestPermission(Permission.storage) &&
+            await requestPermission(Permission.accessMediaLocation) &&
+            // manage external storage needed for android 11/R
+            await requestPermission(Permission.manageExternalStorage)) {
+          return true;
+        } else {
+          return false;
+        }
       } else {
-        return false;
+        if (await requestPermission(Permission.camera) &&
+            await requestPermission(Permission.storage) &&
+            await requestPermission(Permission.accessMediaLocation)) {
+          return true;
+        } else {
+          return false;
+        }
       }
     }
     if (Platform.isIOS) {
@@ -61,8 +76,8 @@ class AppUtils {
         ? await getExternalStorageDirectory()
         : await getApplicationDocumentsDirectory();
     final path = Platform.isAndroid
-        ? '/storage/emulated/0/Medplus/$fileName Report $reportId.pdf'
-        : ('${dir?.path}/$fileName Report $reportId.pdf');
+        ? '/storage/emulated/0/Medplus/${fileName.replaceAll('/', '-')} Report $reportId.pdf'
+        : ('${dir?.path}/${fileName.replaceAll('/', '-')} Report $reportId.pdf');
     if (Platform.isAndroid) {
       if (!await Directory('/storage/emulated/0/Medplus').exists()) {
         Directory('/storage/emulated/0/Medplus').create();

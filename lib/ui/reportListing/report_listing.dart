@@ -21,22 +21,28 @@ class ReportListing extends AppPage {
   }
 
   @override
-  Widget get body {
+  @override
+  Widget get nonScroableBody {
     return Obx(
       () {
         if (controller.apiTupal.value.item1 == ApiStatus.SUCCESS) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              children: [
-                const SizedBox(height: 25),
-                buildAllNames(),
-                const SizedBox(height: 30),
-                buildAllReportListHeader,
-                const SizedBox(height: 22),
-                buildReportList(),
-                const SizedBox(height: 16),
-              ],
+          return RefreshIndicator(
+            onRefresh: controller.onRefresh,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics()),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    buildAllNames(),
+                    buildAllReportListHeader,
+                    const SizedBox(height: 22),
+                    buildReportList(),
+                    const SizedBox(height: 16),
+                  ],
+                ),
+              ),
             ),
           );
         } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR ||
@@ -52,45 +58,61 @@ class ReportListing extends AppPage {
   }
 
   Widget buildAllNames() {
+    if (controller.familyList.isEmpty) {
+      return SizedBox(
+        height: 100,
+        child: NoDataScreen(
+          message: 'no_family_found'.tr,
+        ),
+      );
+    }
     return SizedBox(
-      height: 76,
+      height: 140,
       child: ListView.separated(
         physics: const BouncingScrollPhysics(),
+        shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (_, index) {
           final data = controller.familyList[index];
-          return GestureDetector(
-            onTap: () => controller.onFamilySelected(index),
-            child: Obx(
-              () => Container(
+          return Row(
+            children: [
+              SizedBox(
                 height: 76,
-                width: 73,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color:
-                        data.isSelected ? Palette.primaryColor : Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xff666666).withOpacity(0.20),
-                        blurRadius: 40,
-                      )
-                    ]),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                alignment: Alignment.center,
-                child: Text(
-                  controller.familyList[index].name,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: 15,
-                    overflow: TextOverflow.ellipsis,
-                    fontWeight: FontWeight.w500,
-                    color: data.isSelected
-                        ? Palette.lightBgColor
-                        : Palette.textColor,
+                child: GestureDetector(
+                  onTap: () => controller.onFamilySelected(index),
+                  child: Obx(
+                    () => Container(
+                      width: 73,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: data.isSelected
+                              ? Palette.primaryColor
+                              : Colors.white,
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xff666666).withOpacity(0.20),
+                              blurRadius: 40,
+                            )
+                          ]),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      alignment: Alignment.center,
+                      child: Text(
+                        controller.familyList[index].name,
+                        maxLines: 1,
+                        style: TextStyle(
+                          fontSize: 15,
+                          overflow: TextOverflow.ellipsis,
+                          fontWeight: FontWeight.w500,
+                          color: data.isSelected
+                              ? Palette.lightBgColor
+                              : Palette.textColor,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+            ],
           );
         },
         separatorBuilder: (_, __) => const SizedBox(width: 17),
@@ -122,6 +144,9 @@ class ReportListing extends AppPage {
   Widget buildReportList() {
     if (controller.reportApiTupal.value.item1 == ApiStatus.SUCCESS) {
       if (controller.familyList.isEmpty) {
+        return const SizedBox.shrink();
+      }
+      if (controller.data.isEmpty) {
         return SizedBox(
           height: 100,
           child: NoDataScreen(

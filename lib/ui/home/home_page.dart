@@ -79,7 +79,6 @@ class HomePage extends AppPage {
           controller.homePageData!.user.name,
           style: const TextStyle(
             fontSize: 20,
-            height: 25 / 20,
             fontWeight: FontWeight.w700,
             color: Palette.textColor,
           ),
@@ -244,18 +243,20 @@ class HomePage extends AppPage {
               ),
             ),
           ] else ...[
-            ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.zero,
-              itemCount: controller.homePageData!.yourReport.length,
-              shrinkWrap: true,
-              itemBuilder: (_, index) {
-                return ReportTile(
-                    userName: controller.homePageData!.user.name,
-                    data: controller.homePageData!.yourReport[index]);
-              },
-              separatorBuilder: (_, __) => const SizedBox(
-                height: 10,
+            Obx(
+              () => ListView.separated(
+                physics: const NeverScrollableScrollPhysics(),
+                padding: EdgeInsets.zero,
+                itemCount: controller.homePageData!.yourReport.length,
+                shrinkWrap: true,
+                itemBuilder: (_, index) {
+                  return ReportTile(
+                      userName: controller.homePageData!.user.name,
+                      data: controller.homePageData!.yourReport[index]);
+                },
+                separatorBuilder: (_, __) => const SizedBox(
+                  height: 10,
+                ),
               ),
             ),
           ]

@@ -5,7 +5,7 @@ final enUS = {
   'login_desc': 'Please enter details below to continue',
   'mob_num': 'Mobile Number',
   'request_otp': 'Request OTP',
-  'google_sign_in': 'Google SignIn',
+  'google_sign_in': 'Login with Google',
   'login_with_facebook': 'Login with Facebook',
   //OTP page
   'otp_desc': 'Enter 4 digit verification code sent to your number',
@@ -42,6 +42,7 @@ final enUS = {
   'add_new_member': '+ Add Member',
   'your_reports': 'Your Reports',
   'no_report_found': 'No report found',
+  'no_family_found': 'No Family Member Found',
 
   ///My account page
   'all_my_members': 'All My Members',
@@ -66,7 +67,7 @@ final enUS = {
   'report_date': 'Report Date:',
   'reminder_for_next_checkup': 'Reminder for next Checkup:',
   'finish': 'Finish',
-  '': '',
-  '': '',
+  'updated_succesfully': 'Updated succesfully',
+  'mob_hint_with_cc': 'Mobile Number (Ex. +91 XXXXXXXXXX)',
   '': '',
 };

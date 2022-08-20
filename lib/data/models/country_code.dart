@@ -251,6 +251,15 @@ class CountryCode {
       ccc: code[(map['countryCode'] ?? '')] ?? '',
     );
   }
+  static String getCC(String ccc) {
+    String val = '';
+    code.forEach((key, value) {
+      if (ccc == value) {
+        val = key;
+      }
+    });
+    return val;
+  }
 
   String toJson() => json.encode(toMap());
 

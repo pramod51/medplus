@@ -247,7 +247,11 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
       // }
       controller.hideProgress();
       Get.back();
-      AppSnackBar.onSuccess('added_succesfully'.tr);
+      if (widget.familyId.isEmpty) {
+        AppSnackBar.onSuccess('added_succesfully'.tr);
+      } else {
+        AppSnackBar.onSuccess('updated_succesfully'.tr);
+      }
     } else {
       controller.hideProgress();
       AppSnackBar.onError(apiResponse.message);

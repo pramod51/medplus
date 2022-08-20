@@ -16,6 +16,7 @@ class SearchPageController extends GetxController {
   List<String> suggestions = [];
   final service = Get.put(ApiService());
   final familyNameMap = <int, String>{};
+  String searchedText = '';
   @override
   void onReady() {
     super.onReady();
@@ -27,6 +28,10 @@ class SearchPageController extends GetxController {
     super.onInit();
     fetchFamily();
     textEditingController.addListener(() async {
+      if (textEditingController.text == searchedText) {
+        return;
+      }
+      searchedText = textEditingController.text;
       // await Future.delayed(const Duration(milliseconds: 500));
       final isSucess = await search();
     });

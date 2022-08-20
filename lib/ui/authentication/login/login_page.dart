@@ -11,8 +11,8 @@ import 'package:medplus/widgets/input_form_field.dart';
 
 class LoginPage extends SimpleScaffold {
   static const routeName = "/login";
-  static void start(dynamic arg) {
-    Get.offAllNamed(routeName, arguments: arg);
+  static void start() {
+    Get.offAllNamed(routeName);
   }
 
   LoginPage({Key? key}) : super(key: key);
@@ -79,7 +79,6 @@ class LoginPage extends SimpleScaffold {
         const SizedBox(height: 24),
         AppElevatedBtn(
           onPressed: controller.onLoginClicked,
-          width: 189,
           borderRadius: 245,
           text: 'request_otp'.tr,
           color: Palette.lightBgColor,
@@ -88,8 +87,8 @@ class LoginPage extends SimpleScaffold {
         const SizedBox(height: 12),
         AppElevatedBtn(
           onPressed: controller.onGoogleSIgneInClicked,
-          width: 189,
           borderRadius: 245,
+          icon: SvgPicture.asset(Assets.ic_google),
           text: 'google_sign_in'.tr,
           color: Palette.lightBgColor,
           textColor: Palette.textColor,
@@ -97,8 +96,11 @@ class LoginPage extends SimpleScaffold {
         const SizedBox(height: 12),
         AppElevatedBtn(
           onPressed: controller.loginWithFacebook,
-          width: 189,
           borderRadius: 245,
+          icon: SvgPicture.asset(
+            Assets.ic_fb,
+            height: 20,
+          ),
           text: 'login_with_facebook'.tr,
           color: Palette.lightBgColor,
           textColor: Palette.textColor,

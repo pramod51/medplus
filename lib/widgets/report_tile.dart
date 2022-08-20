@@ -177,7 +177,7 @@ class ReportTile extends StatelessWidget {
     final b = await AppUtils.hasAcceptedPermissions();
     if (!b) return null;
     final saveedPath = await AppUtils.reportsDirPath(
-        fileName: userName + ' ' + data.categoryName + ' ',
+        fileName: userName + ' ' + data.categoryName,
         reportId: data.id.toString());
     File f = File(saveedPath);
     if (await f.exists()) {
@@ -185,7 +185,7 @@ class ReportTile extends StatelessWidget {
       return f;
     } else {
       final f = await Get.put(ApiService()).downloadReport(
-        ('https://medical.techmeguru.com/uploads/documents' + data.reportUrl),
+        (data.reportBaseUrl + '/' + data.reportUrl),
         saveedPath,
       );
       return f;

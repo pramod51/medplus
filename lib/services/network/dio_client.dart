@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/widgets.dart';
 import 'package:medplus/services/api_response.dart';
@@ -26,6 +27,12 @@ class DioClient {
       receiveTimeout: _defaultReceiveTimeout,
     );
     _dio = Dio(options);
+    (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+        (HttpClient client) {
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    };
   }
 
   Future<ApiResponse> post(

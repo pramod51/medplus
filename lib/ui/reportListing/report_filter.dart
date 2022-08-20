@@ -34,19 +34,18 @@ class ReportFilter extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
+            const SizedBox(height: 25),
             buildCloseBtn,
-            const SizedBox(height: 5),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 21),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  buildSearchBox,
-                  const SizedBox(height: 27),
-                  const Divider(
-                    height: 0,
-                    color: Palette.platinum,
-                  ),
+                  // buildSearchBox,
+                  // const Divider(
+                  //   height: 0,
+                  //   color: Palette.platinum,
+                  // ),
                   const SizedBox(height: 25),
                   ...buildCategoryFilter,
                   const SizedBox(height: 26),
@@ -102,13 +101,15 @@ class ReportFilter extends StatelessWidget {
         shrinkWrap: true,
         itemCount: category.length,
         itemBuilder: (_, index) {
-          return AppCheckBox(
-            filled: category[index].isSelected,
-            label: category[index].name,
-            onTap: (val) {
-              category[index].isSelected = val;
-              onCategorySelected(category[index].name, val);
-            },
+          return Obx(
+            () => AppCheckBox(
+              filled: category[index].isSelected.value,
+              label: category[index].name,
+              onTap: (val) {
+                category[index].isSelected.value = val;
+                onCategorySelected(category[index].name, val);
+              },
+            ),
           );
         },
         separatorBuilder: (_, __) => const SizedBox(height: 10),

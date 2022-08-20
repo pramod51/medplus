@@ -73,7 +73,7 @@ class AppElevatedBtnState extends State<AppElevatedBtn> {
     if (widget.icon != null) {
       return SizedBox(
         height: widget.height,
-        //width: widget.width,
+        width: widget.width,
         child: ElevatedButton.icon(
           onPressed: onPressed,
           icon: widget.icon!,
@@ -85,7 +85,7 @@ class AppElevatedBtnState extends State<AppElevatedBtn> {
 
     return SizedBox(
       height: widget.height,
-      //width: widget.width,
+      width: widget.width,
       child: ElevatedButton(
         onPressed: onPressed,
         style: style,

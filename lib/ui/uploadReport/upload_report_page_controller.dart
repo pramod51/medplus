@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:medplus/data/models/home_page_response.dart';
 import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/base/app_page_controller.dart';
+import 'package:medplus/ui/home/home_page_controller.dart';
 import 'package:medplus/utils/app_utils.dart';
 import 'package:medplus/widgets/app_snackbar.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -79,7 +80,8 @@ class UploadReportPageController extends GetxController {
     );
     apiStatus.value = loadingTuple;
     showProgress();
-    final service = await Get.put(ApiService()).uploadReport(
+    final service = Get.put(ApiService());
+    final apiResponse = await service.uploadReport(
       data: data,
       familyId: familyId,
       categoryId: category.id,
@@ -91,10 +93,24 @@ class UploadReportPageController extends GetxController {
         print(progress);
       },
     );
-    if (service.success) {
-      hideProgress();
-      Get.back();
-      AppSnackBar.onSuccess('Your resport successfully uploaded');
+
+    if (apiResponse.success) {
+      final responseData = AddReport.fromMap(apiResponse.data);
+      if (responseData.data != null) {
+        if (familyId == null) {
+          print(responseData.data);
+          Get.find<HomePageController>()
+              .homePageData!
+              .yourReport
+              .insert(0, responseData.data!..categoryName = category.name);
+        }
+        hideProgress();
+        Get.back();
+        AppSnackBar.onSuccess('Your report successfully uploaded');
+      } else {
+        hideProgress();
+        AppSnackBar.onError(responseData.msg);
+      }
     } else {
       hideProgress();
       AppSnackBar.onError('Failed to upload, try again');
@@ -102,7 +118,8 @@ class UploadReportPageController extends GetxController {
   }
 
   void takePicture() async {
-    final isAccepted = await AppUtils.requestPermission(Permission.camera);
+    final isAccepted = await AppUtils.requestPermission(Permission.camera) &&
+        await AppUtils.hasAcceptedPermissions();
     if (!isAccepted) return;
     final ImagePicker _picker = ImagePicker();
     final imageFile = await _picker.pickImage(
@@ -121,7 +138,8 @@ class UploadReportPageController extends GetxController {
       );
     }));
 
-    final savedPath = await AppUtils.reportsDirPath(fileName: familayName);
+    final savedPath = await AppUtils.reportsDirPath(
+        fileName: familayName + ' ' + category.name);
     file = await saveDocument(path: savedPath, pdf: pdf);
     if (file == null) {
       print('file not saved');
@@ -139,7 +157,7 @@ class UploadReportPageController extends GetxController {
     );
     final pdf = pw.Document();
     final savePath = await AppUtils.reportsDirPath(
-      fileName: familayName + category.name,
+      fileName: familayName + ' ' + category.name,
     );
     if (result != null) {
       for (int i = 0; i < result.files.length; i++) {
@@ -158,7 +176,6 @@ class UploadReportPageController extends GetxController {
           );
         }));
       }
-
       file = await saveDocument(path: savePath, pdf: pdf);
     } else {
       print('User canceled the picker');

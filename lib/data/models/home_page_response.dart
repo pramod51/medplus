@@ -89,11 +89,13 @@ class HomePageData {
       user: map['user'] == null ? User.fromMap({}) : User.fromMap(map['user']),
       myFamily: list,
       category: catList,
-      yourReport: List<ReportData>.from(
-        (map['yourReport']).map<ReportData>(
-          (x) => ReportData.fromMap(x),
-        ),
-      ),
+      yourReport: map['yourReport'] == null
+          ? <ReportData>[].obs
+          : List<ReportData>.from(
+              (map['yourReport']).map<ReportData>(
+                (x) => ReportData.fromMap(x),
+              ),
+            ).obs,
       familyNames: nameList,
     );
   }
@@ -161,7 +163,7 @@ class Category {
   final int status;
   final String created_at;
   final String updated_at;
-  bool isSelected;
+  RxBool isSelected;
   Color? color;
   Category({
     required this.id,
@@ -173,8 +175,7 @@ class Category {
     required this.created_at,
     required this.updated_at,
     this.color,
-    this.isSelected = false,
-  });
+  }) : isSelected = false.obs;
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -256,4 +257,39 @@ class CategoryResponse {
 
   @override
   String toString() => 'Ajdkjd(status: $status, msg: $msg, data: $data)';
+}
+
+class AddReport {
+  final String status;
+  final String msg;
+  final ReportData? data;
+  AddReport({
+    required this.status,
+    required this.msg,
+    required this.data,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'status': status,
+      'msg': msg,
+      'data': data?.toMap(),
+    };
+  }
+
+  factory AddReport.fromMap(Map<String, dynamic> map) {
+    return AddReport(
+      status: (map['status'] ?? ''),
+      msg: (map['msg'] ?? ''),
+      data: map['data'] == null ? null : ReportData.fromMap(map['data']),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory AddReport.fromJson(String source) =>
+      AddReport.fromMap(json.decode(source));
+
+  @override
+  String toString() => 'AddReport(status: $status, msg: $msg, data: $data)';
 }
