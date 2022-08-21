@@ -20,23 +20,25 @@ class UploadReportPageController extends GetxController {
   final reminderDate = ''.obs;
   final apiStatus = emptyTuple.obs;
   final uploadProgress = 1.obs;
-  String familayName = 'ok';
+  final familayName = ''.obs;
   int? familyId;
 
   Category category = Category.fromMap({});
-  final subCategory = <String>[];
+  final selectedSubCategory = <String>[];
+  final subCategory = <String>[].obs;
+
   File? file;
 
   @override
-  void onInit() {
-    super.onInit();
-    familayName = Get.arguments[0].toString();
+  void onReady() {
+    super.onReady();
+    familayName.value = Get.arguments[0].toString();
     category = Get.arguments[1] as Category;
     familyId = Get.arguments[2];
     debugPrint(
         familayName + "\n" + category.toString() + "\n" + familyId.toString());
-
-    subCategory.clear();
+    subCategory.assignAll(category.subCategory.split(','));
+    selectedSubCategory.clear();
     reminderDate.value =
         DateTime.now().add(const Duration(days: 7)).format('dd/MM/yyyy');
     reportDate.value = DateTime.now().format('dd/MM/yyyy');
@@ -87,7 +89,7 @@ class UploadReportPageController extends GetxController {
       categoryId: category.id,
       nextCheckupDate: reminderDate.value,
       reportDate: reportDate.value,
-      subCategory: subCategory.join(','),
+      subCategory: selectedSubCategory.join(','),
       onUploadProgress: (int progress) {
         uploadProgress.value = progress;
         print(progress);
@@ -97,6 +99,14 @@ class UploadReportPageController extends GetxController {
     if (apiResponse.success) {
       final responseData = AddReport.fromMap(apiResponse.data);
       if (responseData.data != null) {
+        final savedPath = await AppUtils.reportsDirPath(
+            fileName: familayName.value.updatedName + ' ' + category.name,
+            reportId: responseData.data!.id);
+        await file?.copy(savedPath);
+        final tempdir = Directory(await AppUtils.tempDirPath());
+        if (await tempdir.exists()) {
+          await tempdir.delete();
+        }
         if (familyId == null) {
           print(responseData.data);
           Get.find<HomePageController>()
@@ -138,9 +148,7 @@ class UploadReportPageController extends GetxController {
       );
     }));
 
-    final savedPath = await AppUtils.reportsDirPath(
-        fileName: familayName + ' ' + category.name);
-    file = await saveDocument(path: savedPath, pdf: pdf);
+    file = await saveDocument(pdf: pdf);
     if (file == null) {
       print('file not saved');
     }
@@ -156,14 +164,12 @@ class UploadReportPageController extends GetxController {
       allowedExtensions: ['pdf', 'jpg', 'jpeg', 'png'],
     );
     final pdf = pw.Document();
-    final savePath = await AppUtils.reportsDirPath(
-      fileName: familayName + ' ' + category.name,
-    );
+
     if (result != null) {
       for (int i = 0; i < result.files.length; i++) {
         if (result.files[i].path!.isPDFFileName) {
           file = File(result.files[i].path!);
-          await file?.copy(savePath);
+
           return;
         }
         final image = pw.MemoryImage(
@@ -176,7 +182,7 @@ class UploadReportPageController extends GetxController {
           );
         }));
       }
-      file = await saveDocument(path: savePath, pdf: pdf);
+      file = await saveDocument(pdf: pdf);
     } else {
       print('User canceled the picker');
       // User canceled the picker
@@ -184,11 +190,11 @@ class UploadReportPageController extends GetxController {
   }
 
   Future<File?> saveDocument({
-    required String path,
     required Document pdf,
   }) async {
     final bytes = await pdf.save();
     try {
+      final path = await AppUtils.tempDirPath();
       final file = File(path);
       file.writeAsBytesSync(bytes);
 

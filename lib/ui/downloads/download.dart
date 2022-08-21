@@ -55,11 +55,13 @@ class Downloads extends AppPage {
             return const SizedBox.shrink();
           }
           final list = file.path.split('Medplus/').last.split(' ');
-
+          if (list.length < 2) {
+            return const SizedBox.shrink();
+          }
           String name = '';
           String category = '';
           if (list.isNotEmpty) {
-            name = list.first;
+            name = list.first.replaceAll('_', ' ');
             if (list.length > 1) {
               category = list[1];
             }

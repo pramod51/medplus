@@ -38,22 +38,25 @@ class SplashController extends GetxController {
     //     SharedConfig.phone.isNotNullOrEmpty) {
     //   Get.toNamed(EditProfile.routeName);
     // }
-    else {
-      try {
-        final apiResponse = await Get.put(ApiService()).fetchCategories();
-        print(apiResponse.httpStatusCode.toString() + '#############');
-        if (apiResponse.httpStatusCode == -1) {
-          Get.offAndToNamed(Downloads.routeName);
-          return;
-        }
-        if (apiResponse.success) {
-          final responseData = CategoryResponse.fromMap(apiResponse.data);
-          pref.assigneCategory(responseData.data);
-          HomePage.start();
-        }
-      } catch (e) {
-        print(e);
+  }
+
+  void fetchCategories() async {
+    final pref = Get.find<AppPreferences>();
+    try {
+      final apiResponse = await Get.put(ApiService()).fetchCategories();
+      print(apiResponse.httpStatusCode.toString() + '#############');
+
+      if (apiResponse.httpStatusCode == -1 && SharedConfig.userId != null) {
+        Get.offAndToNamed(Downloads.routeName);
+        return;
       }
+      if (apiResponse.success) {
+        final responseData = CategoryResponse.fromMap(apiResponse.data);
+        pref.assigneCategory(responseData.data);
+        HomePage.start();
+      }
+    } catch (e) {
+      print(e);
     }
   }
 }

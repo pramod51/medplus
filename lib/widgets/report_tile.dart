@@ -177,7 +177,7 @@ class ReportTile extends StatelessWidget {
     final b = await AppUtils.hasAcceptedPermissions();
     if (!b) return null;
     final saveedPath = await AppUtils.reportsDirPath(
-        fileName: userName + ' ' + data.categoryName,
+        fileName: userName.updatedName + ' ' + data.categoryName,
         reportId: data.id.toString());
     File f = File(saveedPath);
     if (await f.exists()) {

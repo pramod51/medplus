@@ -77,7 +77,7 @@ class AppUtils {
         : await getApplicationDocumentsDirectory();
     final path = Platform.isAndroid
         ? '/storage/emulated/0/Medplus/${fileName.replaceAll('/', '-')} Report $reportId.pdf'
-        : ('${dir?.path}/${fileName.replaceAll('/', '-')} Report $reportId.pdf');
+        : ('${dir?.path}/${fileName.replaceAll('/', '-')} Report $reportId .pdf');
     if (Platform.isAndroid) {
       if (!await Directory('/storage/emulated/0/Medplus').exists()) {
         Directory('/storage/emulated/0/Medplus').create();
@@ -88,6 +88,23 @@ class AppUtils {
     //     Directory('${dir.path}/Medplus').create();
     //   }
     // }
+    return path;
+  }
+
+  static Future<String> tempDirPath() async {
+    await hasAcceptedPermissions();
+    final dir = Platform.isAndroid
+        ? await getExternalStorageDirectory()
+        : await getApplicationDocumentsDirectory();
+    final path = Platform.isAndroid
+        ? '/storage/emulated/0/Medplus/temp.pdf'
+        : ('${dir?.path}/temp.pdf');
+    if (Platform.isAndroid) {
+      if (!await Directory('/storage/emulated/0/Medplus').exists()) {
+        Directory('/storage/emulated/0/Medplus').create();
+      }
+    }
+
     return path;
   }
 
@@ -176,6 +193,13 @@ extension StringExtensions on String? {
       result = result.replaceAll('%${i}s', params[i - 1]);
     }
     return result;
+  }
+
+  String get updatedName {
+    if (this == null) return '';
+    if (this!.isNullOrEmpty) return '';
+    if (!this!.contains(' ')) return this!;
+    return this!.replaceAll(' ', '_');
   }
 
   String format(List<String> params) => _interpolate(this!, params);

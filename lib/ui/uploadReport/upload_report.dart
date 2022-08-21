@@ -42,42 +42,44 @@ class UploadReport extends AppPage {
       );
 
   Widget buildSuggestions() {
-    final list = controller.category.subCategory.split(',');
-    return wrapContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'cat_suggestions'.tr.format([controller.category.name]),
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: Palette.textColor,
+    return Obx(() {
+      final list = controller.subCategory;
+      return wrapContainer(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'cat_suggestions'.tr.format([controller.category.name]),
+              style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Palette.textColor,
+              ),
             ),
-          ),
-          const SizedBox(height: 15),
-          Wrap(
-            spacing: 13,
-            runSpacing: 11,
-            children: [
-              for (int i = 0; i < list.length; i++) ...[
-                SimpleChip(
-                  text: list[i],
-                  onClick: (bool val) {
-                    if (val) {
-                      controller.subCategory.add(list[i]);
-                    } else {
-                      controller.subCategory
-                          .removeWhere((element) => element == list[i]);
-                    }
-                  },
-                ),
-              ]
-            ],
-          )
-        ],
-      ),
-    );
+            const SizedBox(height: 15),
+            Wrap(
+              spacing: 13,
+              runSpacing: 11,
+              children: [
+                for (int i = 0; i < list.length; i++) ...[
+                  SimpleChip(
+                    text: list[i],
+                    onClick: (bool val) {
+                      if (val) {
+                        controller.selectedSubCategory.add(list[i]);
+                      } else {
+                        controller.selectedSubCategory
+                            .removeWhere((element) => element == list[i]);
+                      }
+                    },
+                  ),
+                ]
+              ],
+            )
+          ],
+        ),
+      );
+    });
   }
 
   Widget get buildUploadRecord {
@@ -127,14 +129,16 @@ class UploadReport extends AppPage {
           ),
           const SizedBox(width: 3),
           Expanded(
-            child: Text(
-              controller.familayName,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Palette.primaryColor,
+            child: Obx(
+              () => Text(
+                controller.familayName.value,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Palette.primaryColor,
+                ),
               ),
             ),
           ),
