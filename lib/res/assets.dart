@@ -38,7 +38,9 @@ class Assets {
   static const String ic_search_32 = '$_rootSvgPath/ic_search_32.svg';
   static const String ic_home = '$_rootSvgPath/ic_home.svg';
   static const String ic_google = '$_rootSvgPath/ic_google.svg';
-  static const String ic_fb = '$_rootSvgPath/ic_fb.svg';
+  static const String ic_fb = '$_rootSvgPath/ic_fb.png';
+  static const String ic_pdf = '$_rootSvgPath/ic_pdf.svg';
+  static const String ic_cross = '$_rootSvgPath/ic_cross.svg';
   // static const String ic_tick = '$_rootSvgPath/ic_tick.svg';
 
 }

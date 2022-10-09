@@ -21,7 +21,15 @@ class LoginPageController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
+    final ccc = SharedConfig.callingCountryCode ?? '';
     phoneTextEditingController.text = SharedConfig.callingCountryCode ?? '';
+    phoneTextEditingController.addListener(() {
+      if (phoneTextEditingController.text.length < ccc.length) {
+        phoneTextEditingController.text = ccc;
+        phoneTextEditingController.selection = TextSelection.fromPosition(
+            TextPosition(offset: phoneTextEditingController.text.length));
+      }
+    });
   }
 
   void onLoginClicked() async {
@@ -70,6 +78,7 @@ class LoginPageController extends GetxController {
   void showProgress() {
     showDialog(
       context: Get.context!,
+      barrierDismissible: false,
       builder: (_) => AlertDialog(
         backgroundColor: Colors.transparent,
         contentPadding: const EdgeInsets.symmetric(horizontal: 24),
@@ -92,29 +101,47 @@ class LoginPageController extends GetxController {
 
   void onGoogleSIgneInClicked() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null && user.email != null) {
-      print(user.email);
-      print('user signed with google');
-      loginEmail(user.email!);
-      return;
-    }
+    print(user);
+    // await FirebaseAuth.instance.signOut();
+    // await googleSignIn.signOut();
+    // return;
+
+    // if (user != null) {
+
+    // }
     final googleUser = await googleSignIn.signIn();
     if (googleUser == null) return;
     print('-------------------------------');
-    final googleAuth = await googleUser.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-    final user1 = await FirebaseAuth.instance.signInWithCredential(credential);
-    if (FirebaseAuth.instance.currentUser == null) return;
-    loginEmail(FirebaseAuth.instance.currentUser!.email!);
-    print(user1.additionalUserInfo?.username);
+    try {
+      final googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+      final user1 =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      if (FirebaseAuth.instance.currentUser == null) return;
+      loginEmail(user1.additionalUserInfo?.profile!['email']);
+      print(
+          '##########################${user1.additionalUserInfo?.profile!['email']}');
+      print(user1.additionalUserInfo?.username);
+    } catch (e) {
+      print(e);
+      print('object');
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
+    }
   }
 
   void loginWithFacebook() async {
+    // await FacebookAuth.instance.logOut();
+    // await FirebaseAuth.instance.signOut();
+    // return;
+
     try {
-      final facebookLoginResult = await FacebookAuth.instance.login();
+      final facebookLoginResult = await FacebookAuth.instance.login(
+        loginBehavior: LoginBehavior.webOnly,
+      );
       final userData = await FacebookAuth.instance.getUserData();
 
       final facebookAuthCredential = FacebookAuthProvider.credential(
@@ -159,6 +186,8 @@ class LoginPageController extends GetxController {
     } else {
       hideProgress();
       debugPrint('login failed');
+      await GoogleSignIn().signOut();
+      await FirebaseAuth.instance.signOut();
     }
   }
 }

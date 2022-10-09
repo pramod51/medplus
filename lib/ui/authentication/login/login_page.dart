@@ -57,16 +57,6 @@ class LoginPage extends SimpleScaffold {
             hint: 'mob_num'.tr,
             fontSize: 13,
             keyboardType: TextInputType.number,
-            onChange: (val) {
-              if (val.length < Get.arguments.toString().length) {
-                controller.phoneTextEditingController.text = Get.arguments;
-
-                controller.phoneTextEditingController.selection =
-                    TextSelection.fromPosition(TextPosition(
-                        offset:
-                            controller.phoneTextEditingController.text.length));
-              }
-            },
             inputFormatters: [
               FilteringTextInputFormatter.allow(RegExp('[0-9+ ]')),
             ],
@@ -76,34 +66,85 @@ class LoginPage extends SimpleScaffold {
                 const EdgeInsets.symmetric(horizontal: 17, vertical: 15),
           ),
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 22),
         AppElevatedBtn(
           onPressed: controller.onLoginClicked,
-          borderRadius: 245,
+          borderRadius: 10,
           text: 'request_otp'.tr,
           color: Palette.lightBgColor,
           textColor: Palette.textColor,
         ),
-        const SizedBox(height: 12),
-        AppElevatedBtn(
-          onPressed: controller.onGoogleSIgneInClicked,
-          borderRadius: 245,
-          icon: SvgPicture.asset(Assets.ic_google),
-          text: 'google_sign_in'.tr,
-          color: Palette.lightBgColor,
-          textColor: Palette.textColor,
+        const SizedBox(height: 51),
+        Row(
+          children: [
+            const SizedBox(width: 24),
+            Expanded(
+              child: Container(
+                height: 1,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  colors: [
+                    Colors.white.withOpacity(0),
+                    Colors.white,
+                  ],
+                )),
+              ),
+            ),
+            const SizedBox(width: 18),
+            const Text(
+              'Or Continue with',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 18),
+            Expanded(
+              child: Container(
+                height: 1,
+                decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                  colors: [
+                    Colors.white,
+                    Colors.white.withOpacity(0),
+                  ],
+                )),
+              ),
+            ),
+            const SizedBox(width: 24),
+          ],
         ),
-        const SizedBox(height: 12),
-        AppElevatedBtn(
-          onPressed: controller.loginWithFacebook,
-          borderRadius: 245,
-          icon: SvgPicture.asset(
-            Assets.ic_fb,
-            height: 20,
-          ),
-          text: 'login_with_facebook'.tr,
-          color: Palette.lightBgColor,
-          textColor: Palette.textColor,
+        const SizedBox(height: 49),
+        Row(
+          children: [
+            const SizedBox(width: 24),
+            Expanded(
+              child: AppElevatedBtn(
+                onPressed: controller.onGoogleSIgneInClicked,
+                borderRadius: 5,
+                icon: SvgPicture.asset(Assets.ic_google),
+                text: 'google_sign_in'.tr,
+                color: Colors.white.withOpacity(0.8),
+                textColor: Palette.textColor,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: AppElevatedBtn(
+                onPressed: controller.loginWithFacebook,
+                borderRadius: 5,
+                icon: Image.asset(
+                  Assets.ic_fb,
+                  height: 20,
+                ),
+                text: 'login_with_facebook'.tr,
+                color: Colors.white.withOpacity(0.8),
+                textColor: Palette.textColor,
+              ),
+            ),
+            const SizedBox(width: 24),
+          ],
         ),
         const SizedBox(height: 50),
       ],
@@ -123,16 +164,16 @@ class LoginPage extends SimpleScaffold {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: AspectRatio(
-              aspectRatio: 416 / 117,
-              child: SvgPicture.asset(
-                Assets.ic_login_header,
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.topCenter,
+          //   child: AspectRatio(
+          //     aspectRatio: 416 / 117,
+          //     child: SvgPicture.asset(
+          //       Assets.ic_login_header,
+          //       fit: BoxFit.fill,
+          //     ),
+          //   ),
+          // ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(

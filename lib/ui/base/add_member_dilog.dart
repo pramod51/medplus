@@ -8,17 +8,18 @@ import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/base/app_page_controller.dart';
 import 'package:medplus/ui/home/home_page_controller.dart';
 import 'package:medplus/ui/search/search_page_controller.dart';
+import 'package:medplus/utils/app_utils.dart';
 import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/app_snackbar.dart';
 import 'package:medplus/widgets/input_form_field.dart';
 import 'package:medplus/widgets/radio_button.dart';
 
-class AddMemberDilog extends StatefulWidget {
+class AddMemberDialog extends StatefulWidget {
   final String name;
   final String relation;
   final bool isMale;
   final String familyId;
-  const AddMemberDilog({
+  const AddMemberDialog({
     Key? key,
     this.familyId = '',
     this.name = '',
@@ -27,10 +28,10 @@ class AddMemberDilog extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<AddMemberDilog> createState() => _AddMemberDilogState();
+  State<AddMemberDialog> createState() => _AddMemberDialogState();
 }
 
-class _AddMemberDilogState extends State<AddMemberDilog> {
+class _AddMemberDialogState extends State<AddMemberDialog> {
   bool isMale = true;
   final nameTextEditingController = TextEditingController();
   final relationTextEditingController = TextEditingController();
@@ -56,7 +57,9 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'add_family_member'.tr,
+                widget.familyId.isEmpty
+                    ? 'add_family_member'.tr
+                    : 'update_family_member'.tr,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -161,11 +164,11 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
   }
 
   void addMember() async {
-    if (nameTextEditingController.text.isEmpty) {
+    if (nameTextEditingController.text.trim().isEmpty) {
       AppSnackBar.onSuccess('fill_name'.tr);
       return;
     }
-    if (relationTextEditingController.text.isEmpty) {
+    if (relationTextEditingController.text.trim().isEmpty) {
       AppSnackBar.onSuccess('fill_realtion'.tr);
       return;
     }
@@ -181,24 +184,19 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
     final service = Get.put(ApiService());
 
     final apiResponse = await service.addFamily(
-      name: nameTextEditingController.text,
-      relation: relationTextEditingController.text,
+      name: nameTextEditingController.text.trim(),
+      relation: relationTextEditingController.text.trim(),
       gender: isMale ? 'male'.tr : 'female'.tr,
     );
     if (apiResponse.success) {
       final data = AddFamily.fromMap(apiResponse.data);
-      final homepageData = Get.find<HomePageController>().homePageData;
+      final familyList = Get.find<HomePageController>().familyList;
       Get.put(SearchPageController()).familyNameMap[data.data.id!] =
           data.data.name;
-      if (homepageData != null) {
-        homepageData.myFamily.add(data.data);
-        for (FamilyData f in homepageData.myFamily) {
-          print(f.name);
-        }
-      }
+      familyList.add(data.data);
       controller.hideProgress();
       Get.back();
-      AppSnackBar.onSuccess('added_succesfully'.tr);
+      AppSnackBar.onSuccess('added_successfully'.tr);
     } else {
       controller.hideProgress();
       AppSnackBar.onError(apiResponse.message);
@@ -210,17 +208,16 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
 
     final apiResponse = await service.updateFamily(
       id: widget.familyId,
-      name: nameTextEditingController.text,
-      relation: relationTextEditingController.text,
+      name: nameTextEditingController.text.trim(),
+      relation: relationTextEditingController.text.trim(),
       gender: isMale ? 'male'.tr : 'female'.tr,
     );
     if (apiResponse.success) {
       // final data = AddFamily.fromMap(apiResponse.data);
-      final homepageData = Get.find<HomePageController>().homePageData;
-      if (homepageData != null && homepageData.myFamily.isNotEmpty) {
-        homepageData.myFamily[homepageData.myFamily
-                .indexWhere((e) => e.id?.toString() == widget.familyId)] =
-            FamilyData(
+      final familyList = Get.find<HomePageController>().familyList;
+      if (familyList.isNotEmpty) {
+        familyList[familyList.indexWhere(
+            (e) => e.id?.toString() == widget.familyId)] = FamilyData(
           id: int.tryParse(widget.familyId),
           user_id: -1,
           relation: relationTextEditingController.text,
@@ -233,6 +230,8 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
           updated_at: '',
           isSelected: false,
         );
+        AppUtils.updateFileName(widget.name.replaceAll(' ', '_'),
+            nameTextEditingController.text.trim().replaceAll(' ', '_'));
       }
 
       Get.put(SearchPageController())
@@ -248,9 +247,9 @@ class _AddMemberDilogState extends State<AddMemberDilog> {
       controller.hideProgress();
       Get.back();
       if (widget.familyId.isEmpty) {
-        AppSnackBar.onSuccess('added_succesfully'.tr);
+        AppSnackBar.onSuccess('added_successfully'.tr);
       } else {
-        AppSnackBar.onSuccess('updated_succesfully'.tr);
+        AppSnackBar.onSuccess('updated_successfully'.tr);
       }
     } else {
       controller.hideProgress();

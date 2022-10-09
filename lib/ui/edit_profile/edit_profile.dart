@@ -4,6 +4,7 @@ import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/ui/base/app_page.dart';
 import 'package:medplus/ui/edit_profile/edit_profile_controller.dart';
+import 'package:medplus/utils/app_utils.dart';
 import 'package:medplus/widgets/app_button.dart';
 import 'package:medplus/widgets/input_form_field.dart';
 import 'package:medplus/widgets/radio_button.dart';
@@ -42,13 +43,13 @@ class EditProfile extends AppPage {
               InputFormField(
                 controller: controller.emailTextEditingController,
                 hint: 'email_req'.tr,
-                enabled: SharedConfig.email != null,
+                enabled: SharedConfig.email.isNullOrEmpty,
               ),
               const SizedBox(height: 18),
               InputFormField(
                 controller: controller.phoneTextEditingController,
                 hint: 'mobile_number_req'.tr,
-                enabled: SharedConfig.phone != null,
+                enabled: SharedConfig.phone.isNullOrEmpty,
               ),
               const SizedBox(height: 25),
               // buildRadioBtn,

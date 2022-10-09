@@ -9,7 +9,7 @@ import 'package:medplus/utils/app_utils.dart';
 class ApiService {
   final DioClient client = DioClient.getInstance();
   final String baseUrl = 'https://medical.techmeguru.com';
-  Map<String, dynamic> makePalyload([
+  Map<String, dynamic> makePayload([
     Map<String, dynamic>? data,
   ]) {
     return {
@@ -25,7 +25,7 @@ class ApiService {
   Future<ApiResponse> doLogin(String phone) {
     return client.post(
       '$baseUrl/api/v1/get_challenge',
-      makePalyload({
+      makePayload({
         "phone": phone,
         'ccc': SharedConfig.callingCountryCode,
         'cc': SharedConfig.countryCode,
@@ -36,7 +36,7 @@ class ApiService {
   Future<ApiResponse> doLoginWithSocialMedia(String email) {
     return client.post(
       '$baseUrl/api/v1/get_challenge',
-      makePalyload({
+      makePayload({
         "email": email,
       }),
     );
@@ -49,13 +49,14 @@ class ApiService {
   ) {
     return client.post(
       '$baseUrl/api/v1/update_user',
-      makePalyload({
+      makePayload({
         "user_id": SharedConfig.userId,
         "name": name,
-        if (SharedConfig.email!.isEmpty) "email": email,
-        if (SharedConfig.phone!.isEmpty) "phone": phone,
-        "cc": SharedConfig.countryCode,
-        "ccc": SharedConfig.callingCountryCode,
+        if (SharedConfig.email.isNullOrEmpty) "email": email,
+        if (SharedConfig.phone.isNullOrEmpty) "phone": phone,
+        if (SharedConfig.phone.isNullOrEmpty) "cc": SharedConfig.countryCode,
+        if (SharedConfig.phone.isNullOrEmpty)
+          "ccc": SharedConfig.callingCountryCode,
       }),
     );
   }
@@ -63,7 +64,7 @@ class ApiService {
   Future<ApiResponse> fetchHomePageData() {
     return client.post(
       '$baseUrl/api/v1/my_dashboard',
-      makePalyload({
+      makePayload({
         "user_id": SharedConfig.userId,
       }),
     );
@@ -72,7 +73,7 @@ class ApiService {
   Future<ApiResponse> fetchCategories() {
     return client.post(
       '$baseUrl/api/v1/get_category',
-      makePalyload(),
+      makePayload(),
     );
   }
 
@@ -84,7 +85,7 @@ class ApiService {
       required String reportDate,
       required String nextCheckupDate,
       required Function(int) onUploadProgress}) {
-    FormData formData = FormData.fromMap(makePalyload({
+    FormData formData = FormData.fromMap(makePayload({
       "user_id": SharedConfig.userId,
       "family_id": familyId,
       'category_id': categoryId,
@@ -125,7 +126,7 @@ class ApiService {
   Future<ApiResponse> searchReport(String query, CancelToken? cancelToken) {
     return client.post(
       '$baseUrl/api/v1/search_documents',
-      makePalyload({
+      makePayload({
         "user_id": SharedConfig.userId,
         'key': query,
       }),
@@ -136,7 +137,7 @@ class ApiService {
   Future<ApiResponse> fetchFamily() {
     return client.post(
       '$baseUrl/api/v1/get_family',
-      makePalyload({
+      makePayload({
         "user_id": SharedConfig.userId,
       }),
     );
@@ -145,7 +146,7 @@ class ApiService {
   Future<ApiResponse> fetchFamilyReports(int? id, CancelToken cancelToken) {
     return client.post(
         '$baseUrl/api/v1/get_my_family_documents',
-        makePalyload({
+        makePayload({
           "user_id": SharedConfig.userId,
           'family_id': id,
         }),
@@ -159,7 +160,7 @@ class ApiService {
   }) {
     return client.post(
       '$baseUrl/api/v1/add_family',
-      makePalyload({
+      makePayload({
         "user_id": SharedConfig.userId,
         "name": name,
         "relation": relation,
@@ -176,7 +177,7 @@ class ApiService {
   }) {
     return client.post(
       '$baseUrl/api/v1/update_family',
-      makePalyload({
+      makePayload({
         'family_id': id,
         "user_id": SharedConfig.userId,
         "name": name,

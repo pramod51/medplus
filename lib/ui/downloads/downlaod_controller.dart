@@ -11,7 +11,8 @@ class DownloadController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    await AppUtils.hasAcceptedPermissions();
+    final isAcceptedPermissions = await AppUtils.hasAcceptedPermissions();
+    if (!isAcceptedPermissions) return;
     if (Platform.isAndroid) {
       if (await Directory('/storage/emulated/0/Medplus/').exists()) {
         final allFiles =

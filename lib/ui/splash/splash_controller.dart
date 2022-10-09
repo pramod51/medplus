@@ -21,11 +21,11 @@ class SplashController extends GetxController {
     if (SharedConfig.languageCode.isNullOrEmpty) {
       SharedConfig.saveString(AppPreferencesKeys.languageCode, 'en');
     }
+    await fetchCategories();
     if (SharedConfig.userId == null) {
       final apiResponse = await Get.put(ApiService()).fetchCountryCode();
       if (!apiResponse.success) return;
       final responseData = CountryCode.fromMap(apiResponse.data);
-
       pref.saveString(
           AppPreferencesKeys.languageCode, Get.locale?.languageCode ?? 'en');
       pref.saveString(AppPreferencesKeys.callingCountryCode, responseData.ccc);
@@ -34,13 +34,9 @@ class SplashController extends GetxController {
       print(responseData.cc);
       LoginPage.start();
     }
-    // else if (SharedConfig.email.isNullOrEmpty ||
-    //     SharedConfig.phone.isNotNullOrEmpty) {
-    //   Get.toNamed(EditProfile.routeName);
-    // }
   }
 
-  void fetchCategories() async {
+  Future<void> fetchCategories() async {
     final pref = Get.find<AppPreferences>();
     try {
       final apiResponse = await Get.put(ApiService()).fetchCategories();
@@ -53,7 +49,9 @@ class SplashController extends GetxController {
       if (apiResponse.success) {
         final responseData = CategoryResponse.fromMap(apiResponse.data);
         pref.assigneCategory(responseData.data);
-        HomePage.start();
+        if (SharedConfig.userId != null) {
+          HomePage.start();
+        }
       }
     } catch (e) {
       print(e);

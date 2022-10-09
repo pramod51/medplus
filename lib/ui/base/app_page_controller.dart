@@ -1,15 +1,22 @@
+import 'dart:io';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
+import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:medplus/data/preferences/app_preferences.dart';
-import 'package:medplus/main.dart';
 import 'package:medplus/services/api_response.dart';
 import 'package:medplus/ui/authentication/login/login_page.dart';
 import 'package:medplus/ui/base/add_member_dilog.dart';
+import 'package:medplus/ui/edit_profile/edit_profile.dart';
 import 'package:medplus/ui/home/home_page.dart';
-import 'package:medplus/ui/home/home_page_controller.dart';
 import 'package:medplus/ui/myAccount/my_account_page.dart';
 import 'package:medplus/ui/reportListing/report_listing.dart';
 import 'package:medplus/ui/search/search_page.dart';
+import 'package:medplus/ui/splash/splash_page.dart';
+import 'package:share_plus/share_plus.dart';
 
 enum BottomNavItems {
   home,
@@ -27,7 +34,9 @@ class AppPageController extends GetxController {
   ];
   final selectedBottomNav = BottomNavItems.home.obs;
 
-  void onMyAccountClicked() {}
+  void onMyAccountClicked() {
+    Get.toNamed(EditProfile.routeName);
+  }
 
   void onAllReportsClicked() {
     onTap(2);
@@ -51,7 +60,7 @@ class AppPageController extends GetxController {
         contentPadding: EdgeInsets.zero,
         content: SizedBox(
           width: double.maxFinite,
-          child: AddMemberDilog(
+          child: AddMemberDialog(
             familyId: familyId,
             name: name,
             relation: relation,
@@ -75,16 +84,25 @@ class AppPageController extends GetxController {
       await Get.updateLocale(const Locale('en', 'US'));
     }
     Get.back();
-    HomePage.start();
-    Get.find<HomePageController>().fetchData();
-    runApp(const RestartWidget());
+    Get.deleteAll();
+    Get.offAndToNamed(SplashPage.routeName);
+    Phoenix.rebirth(Get.context!);
   }
 
-  void onRefAFrdClicked() {}
+  void onRefAFrdClicked() {
+    Share.share(
+      Platform.isAndroid
+          ? 'Download the Medplus App\nhttps://play.google.com/store/apps/details?id=com.peoplestrong.alt.organise'
+          : 'Download the Medplus App\nhttps://apps.apple.com/in/app/alt-worklife/id1166495470',
+    );
+  }
 
   void onSignOutClicked() async {
     Get.find<AppPreferences>().clearAll();
     await Get.deleteAll();
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
+    await FacebookAuth.instance.logOut();
     LoginPage.start();
   }
 
@@ -152,6 +170,7 @@ class AppPageController extends GetxController {
   void showProgress([Widget? child]) {
     showDialog(
       context: Get.context!,
+      barrierDismissible: false,
       builder: (_) => AlertDialog(
         backgroundColor: Colors.transparent,
         contentPadding: const EdgeInsets.symmetric(horizontal: 24),

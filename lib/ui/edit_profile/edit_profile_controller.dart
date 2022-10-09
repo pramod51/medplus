@@ -5,6 +5,8 @@ import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/base/app_page_controller.dart';
 import 'package:medplus/ui/home/home_page.dart';
+import 'package:medplus/ui/home/home_page_controller.dart';
+import 'package:medplus/utils/app_utils.dart';
 import 'package:medplus/widgets/app_snackbar.dart';
 
 class EditProfileController extends AppPageController {
@@ -20,6 +22,14 @@ class EditProfileController extends AppPageController {
     phoneTextEditingController.text = (SharedConfig.callingCountryCode ?? "") +
         ' ' +
         (SharedConfig.phone ?? '');
+    final ccc = SharedConfig.callingCountryCode ?? '';
+    phoneTextEditingController.addListener(() {
+      if (phoneTextEditingController.text.length < ccc.length) {
+        phoneTextEditingController.text = ccc;
+        phoneTextEditingController.selection = TextSelection.fromPosition(
+            TextPosition(offset: phoneTextEditingController.text.length));
+      }
+    });
   }
 
   void updateDeatils() async {
@@ -50,18 +60,30 @@ class EditProfileController extends AppPageController {
       phoneTextEditingController.text
           .replaceAll(SharedConfig.callingCountryCode ?? " ", '')
           .trim(),
-      emailTextEditingController.text,
+      emailTextEditingController.text.trim(),
     );
     if (apiResponse.success) {
       final responseData = LoginResponse.fromMap(apiResponse.data);
-      print(responseData);
+      print(responseData.data);
       if (responseData.data == null) {
         hideProgress();
         AppSnackBar.onError(responseData.msg);
         return;
       }
+      SharedConfig.saveEmail(responseData.data!.email);
+      SharedConfig.savePhone(responseData.data!.phone);
+      if (SharedConfig.name.isNotNullOrEmpty) {
+        AppUtils.updateFileName(SharedConfig.name!.replaceAll(' ', '_'),
+            nameTextEditingController.text.trim().replaceAll(' ', '_'));
+      }
+      SharedConfig.saveString(
+          AppPreferencesKeys.name, nameTextEditingController.text.trim());
       hideProgress();
-      HomePage.start();
+      if (Get.isRegistered<HomePageController>()) {
+        Get.back();
+      } else {
+        HomePage.start();
+      }
     } else {
       hideProgress();
       AppSnackBar.onError(apiResponse.message);

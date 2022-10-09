@@ -83,15 +83,52 @@ class UploadReport extends AppPage {
   }
 
   Widget get buildUploadRecord {
-    return wrapContainer(
-      padding: const EdgeInsets.fromLTRB(17, 20, 17, 32),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...buildRecodForAndDesc(),
-          const SizedBox(height: 8),
-          buildActions,
-        ],
+    return Obx(
+      () => wrapContainer(
+        padding: const EdgeInsets.fromLTRB(17, 20, 17, 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ...buildRecodForAndDesc(),
+            const SizedBox(height: 8),
+            buildActions,
+            if (controller.fileName.isNotEmpty) ...[
+              const SizedBox(height: 19),
+              const Divider(
+                height: 0,
+                color: Palette.textLight,
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  SvgPicture.asset(
+                    Assets.ic_pdf,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: controller.onPdfFileClicked,
+                      child: Text(
+                        controller.fileName.value,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Palette.textColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  IconButton(
+                    onPressed: controller.onCrossClicked,
+                    icon: SvgPicture.asset(
+                      Assets.ic_cross,
+                    ),
+                  ),
+                ],
+              ),
+            ]
+          ],
+        ),
       ),
     );
   }
@@ -131,7 +168,7 @@ class UploadReport extends AppPage {
           Expanded(
             child: Obx(
               () => Text(
-                controller.familayName.value,
+                controller.familyName.value,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(

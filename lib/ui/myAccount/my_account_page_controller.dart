@@ -6,9 +6,9 @@ import 'package:medplus/ui/base/app_page_controller.dart';
 import 'package:medplus/ui/home/home_page_controller.dart';
 
 class MyAccountPageController extends AppPageController {
-  final apiTupal = emptyTuple.obs;
+  final apiTuple = emptyTuple.obs;
   final service = Get.put(ApiService());
-  final homePageController = Get.find<HomePageController>();
+  final familyList = Get.find<HomePageController>().familyList;
 
   @override
   void onReady() {
@@ -19,19 +19,20 @@ class MyAccountPageController extends AppPageController {
   }
 
   void fetchFamily() async {
-    apiTupal.value = loadingTuple;
-    if (homePageController.homePageData != null) {
-      apiTupal.value = successTuple;
+    apiTuple.value = loadingTuple;
+    if (familyList.isNotEmpty) {
+      apiTuple.value = successTuple;
       return;
     }
+
     final apiResponse = await service.fetchHomePageData();
-    final responseData = HomePageResponse.fromMap(apiResponse.data);
-    if (apiResponse.success && responseData.data != null) {
-      homePageController.homePageData = responseData.data;
-      apiTupal.value = successTuple;
+    if (apiResponse.success && apiResponse.data != null) {
+      final responseData = HomePageResponse.fromMap(apiResponse.data);
+      familyList.assignAll(responseData.data!.myFamily);
+      apiTuple.value = successTuple;
       debugPrint('Family data Success${responseData.msg}');
     } else {
-      apiTupal.value = errorTuple;
+      apiTuple.value = errorTuple;
     }
   }
 }

@@ -24,7 +24,7 @@ class HomePage extends AppPage {
   @override
   Widget get body {
     return Obx(() {
-      if (controller.apiTupal.value.item1 == ApiStatus.SUCCESS) {
+      if (controller.apiTuple.value.item1 == ApiStatus.SUCCESS) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -37,7 +37,7 @@ class HomePage extends AppPage {
             const SizedBox(height: 26),
           ],
         );
-      } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+      } else if (controller.apiTuple.value.item1 == ApiStatus.SERVER_ERROR) {
         return ErrorScreen(
           onTryAgain: controller.fetchData,
         );
@@ -50,13 +50,13 @@ class HomePage extends AppPage {
   List<Widget> get leadingAppBar {
     return [
       Obx(() {
-        return controller.apiTupal.value.item1 == ApiStatus.SUCCESS
+        return controller.apiTuple.value.item1 == ApiStatus.SUCCESS
             ? buildProfileImage
             : const Spacer();
       }),
       const SizedBox(width: 12),
       Obx(() {
-        return controller.apiTupal.value.item1 == ApiStatus.SUCCESS
+        return controller.apiTuple.value.item1 == ApiStatus.SUCCESS
             ? Expanded(child: buildName)
             : const SizedBox.shrink();
       }),
@@ -136,15 +136,11 @@ class HomePage extends AppPage {
     }
 
     return Obx(() {
-      final list = controller.homePageData!.myFamily;
-
+      final list = controller.familyList;
       return AppTabBarPlain(
         initialTabIndex: controller.selectedTabIndex,
         height: 33,
         tabs: [
-          Tab(
-            child: Text(controller.homePageData!.user.name),
-          ),
           for (FamilyData data in list) ...[
             Tab(
               child: Text(data.name),
@@ -153,11 +149,10 @@ class HomePage extends AppPage {
         ],
         onTabClicked: (int index) {
           controller.selectedTabIndex = index;
-          if (index == 0) {
-            controller.name = controller.homePageData!.user.name;
-          }
-          controller.onTabClicked(
-              index == 0 ? FamilyData.fromMap({}) : list[index - 1]);
+          // if (index == 0) {
+          //   controller.name = controller.homePageData!.user.name;
+          // }
+          controller.onTabClicked(list[index]);
         },
       );
     });
@@ -235,7 +230,12 @@ class HomePage extends AppPage {
             ),
           ),
           const SizedBox(height: 8),
-          if (controller.homePageData!.yourReport.isEmpty) ...[
+          if (controller.reportApiTuple.value.item1 == ApiStatus.LOADING) ...[
+            const Center(child: CircularProgressIndicator.adaptive()),
+          ] else if (controller.reportApiTuple.value.item1 ==
+              ApiStatus.SERVER_ERROR) ...[
+            const ErrorScreen(),
+          ] else if (controller.reportList.isEmpty) ...[
             const SizedBox(
               height: 100,
               child: NoDataScreen(
@@ -247,12 +247,13 @@ class HomePage extends AppPage {
               () => ListView.separated(
                 physics: const NeverScrollableScrollPhysics(),
                 padding: EdgeInsets.zero,
-                itemCount: controller.homePageData!.yourReport.length,
+                itemCount: controller.reportList.length,
                 shrinkWrap: true,
                 itemBuilder: (_, index) {
                   return ReportTile(
-                      userName: controller.homePageData!.user.name,
-                      data: controller.homePageData!.yourReport[index]);
+                      userName: controller
+                          .familyList[controller.selectedTabIndex].name,
+                      data: controller.reportList[index]);
                 },
                 separatorBuilder: (_, __) => const SizedBox(
                   height: 10,

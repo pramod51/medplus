@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:device_info/device_info.dart';
 import 'package:intl/intl.dart';
+import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
@@ -12,6 +13,43 @@ class AppUtils {
   static void shareFile(File? file, [String? text]) {
     if (file == null) return;
     Share.shareFiles([file.path], text: text);
+  }
+
+  static void updateFileName(String oldName, String newName) async {
+    final isAcceptedPermissions = await isPermissionGranted();
+    if (!isAcceptedPermissions) return;
+    print('##########################$oldName  $newName');
+
+    List<FileSystemEntity> allFiles = [];
+    if (Platform.isAndroid) {
+      if (await Directory('/storage/emulated/0/Medplus/').exists()) {
+        final files =
+            Directory('/storage/emulated/0/Medplus/').listSync(recursive: true);
+        allFiles.addAll(files);
+      }
+    } else {
+      final dir = await getApplicationDocumentsDirectory();
+      if (await dir.exists()) {
+        final files = dir.listSync(recursive: true);
+        allFiles.addAll(files);
+      }
+    }
+    try {
+      print('########################## try${allFiles.length}');
+      for (var e in allFiles) {
+        final root = e.path.split('Medplus/');
+        final path = root.last;
+        if (path.split(' ').first == oldName &&
+            path.endsWith('${SharedConfig.userId}.pdf')) {
+          final newPath =
+              root.first + 'Medplus/' + (path.replaceFirst(oldName, newName));
+          print('object-----------$newPath');
+          await File(e.path).rename(newPath);
+        }
+      }
+    } catch (e) {
+      print('##########################$e');
+    }
   }
 
   static Future<bool> hasAcceptedPermissions() async {
@@ -64,6 +102,44 @@ class AppUtils {
     }
   }
 
+  static Future<bool> isPermissionGranted() async {
+    if (Platform.isAndroid) {
+      DeviceInfoPlugin deviceInfoPlugin = DeviceInfoPlugin();
+      final androidInfo = await deviceInfoPlugin.androidInfo;
+      final apiLevel = androidInfo.version.sdkInt;
+      if (apiLevel > 29) {
+        if (await Permission.camera.status.isGranted &&
+            await Permission.storage.status.isGranted &&
+            await Permission.accessMediaLocation.status.isGranted &&
+            // manage external storage needed for android 11/R
+            await Permission.manageExternalStorage.status.isGranted) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        if (await Permission.camera.status.isGranted &&
+            await Permission.storage.status.isGranted &&
+            await Permission.accessMediaLocation.status.isGranted) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+    if (Platform.isIOS) {
+      if (await Permission.photos.status.isGranted &&
+          await Permission.storage.status.isGranted) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      // not android or ios
+      return false;
+    }
+  }
+
   static Future<bool> requestPermission(Permission permission) async {
     final req = await permission.request();
     return req.isGranted;
@@ -76,8 +152,8 @@ class AppUtils {
         ? await getExternalStorageDirectory()
         : await getApplicationDocumentsDirectory();
     final path = Platform.isAndroid
-        ? '/storage/emulated/0/Medplus/${fileName.replaceAll('/', '-')} Report $reportId.pdf'
-        : ('${dir?.path}/${fileName.replaceAll('/', '-')} Report $reportId .pdf');
+        ? '/storage/emulated/0/Medplus/${fileName.replaceAll('/', '-')} Report $reportId${SharedConfig.userId}.pdf'
+        : ('${dir?.path}/${fileName.replaceAll('/', '-')} Report $reportId${SharedConfig.userId}.pdf');
     if (Platform.isAndroid) {
       if (!await Directory('/storage/emulated/0/Medplus').exists()) {
         Directory('/storage/emulated/0/Medplus').create();

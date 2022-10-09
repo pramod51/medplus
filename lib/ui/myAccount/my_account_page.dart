@@ -20,7 +20,7 @@ class MyAccountPage extends AppPage {
   Widget get body {
     return Obx(
       () {
-        if (controller.apiTupal.value.item1 == ApiStatus.SUCCESS) {
+        if (controller.apiTuple.value.item1 == ApiStatus.SUCCESS) {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(
@@ -60,7 +60,7 @@ class MyAccountPage extends AppPage {
               ],
             ),
           );
-        } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+        } else if (controller.apiTuple.value.item1 == ApiStatus.SERVER_ERROR) {
           return ErrorScreen(
             onTryAgain: controller.fetchFamily,
           );
@@ -72,7 +72,7 @@ class MyAccountPage extends AppPage {
 
   Widget buildMemberList() {
     return Obx(() {
-      final list = controller.homePageController.homePageData!.myFamily;
+      final list = controller.familyList.where((p0) => p0.id != null).toList();
       if (list.isEmpty) {
         return SizedBox(
           height: 100,

@@ -25,7 +25,7 @@ class ReportListing extends AppPage {
   Widget get nonScroableBody {
     return Obx(
       () {
-        if (controller.apiTupal.value.item1 == ApiStatus.SUCCESS) {
+        if (controller.apiTuple.value.item1 == ApiStatus.SUCCESS) {
           return RefreshIndicator(
             onRefresh: controller.onRefresh,
             child: SingleChildScrollView(
@@ -45,10 +45,10 @@ class ReportListing extends AppPage {
               ),
             ),
           );
-        } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR ||
-            controller.apiTupal.value.item1 == ApiStatus.NO_DATA) {
+        } else if (controller.apiTuple.value.item1 == ApiStatus.SERVER_ERROR ||
+            controller.apiTuple.value.item1 == ApiStatus.NO_DATA) {
           return ErrorScreen(
-            message: controller.apiTupal.value.item2,
+            message: controller.apiTuple.value.item2,
             onTryAgain: controller.fetchFamilyReport,
           );
         }
@@ -67,25 +67,28 @@ class ReportListing extends AppPage {
       );
     }
     return SizedBox(
+      width: double.infinity,
       height: 140,
       child: ListView.separated(
         physics: const BouncingScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (_, index) {
-          final data = controller.familyList[index];
-          return Row(
-            children: [
-              SizedBox(
-                height: 76,
-                child: GestureDetector(
-                  onTap: () => controller.onFamilySelected(index),
-                  child: Obx(
-                    () => Container(
+          return Obx(() {
+            final data = controller.familyList
+                .where((p0) => p0.id != null)
+                .toList()[index];
+            return Row(
+              children: [
+                SizedBox(
+                  height: 76,
+                  child: GestureDetector(
+                    onTap: () => controller.onFamilySelected(index),
+                    child: Container(
                       width: 73,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: data.isSelected
+                          color: index == controller.selectedIndex.value
                               ? Palette.primaryColor
                               : Colors.white,
                           boxShadow: [
@@ -97,13 +100,13 @@ class ReportListing extends AppPage {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       alignment: Alignment.center,
                       child: Text(
-                        controller.familyList[index].name,
+                        data.name,
                         maxLines: 1,
                         style: TextStyle(
                           fontSize: 15,
                           overflow: TextOverflow.ellipsis,
                           fontWeight: FontWeight.w500,
-                          color: data.isSelected
+                          color: index == controller.selectedIndex.value
                               ? Palette.lightBgColor
                               : Palette.textColor,
                         ),
@@ -111,12 +114,12 @@ class ReportListing extends AppPage {
                     ),
                   ),
                 ),
-              ),
-            ],
-          );
+              ],
+            );
+          });
         },
         separatorBuilder: (_, __) => const SizedBox(width: 17),
-        itemCount: controller.familyList.length,
+        itemCount: controller.familyList.where((p0) => p0.id != null).length,
       ),
     );
   }
@@ -142,7 +145,7 @@ class ReportListing extends AppPage {
   }
 
   Widget buildReportList() {
-    if (controller.reportApiTupal.value.item1 == ApiStatus.SUCCESS) {
+    if (controller.reportApiTuple.value.item1 == ApiStatus.SUCCESS) {
       if (controller.familyList.isEmpty) {
         return const SizedBox.shrink();
       }
@@ -161,13 +164,14 @@ class ReportListing extends AppPage {
           itemCount: controller.data.length,
           shrinkWrap: true,
           itemBuilder: (_, index) => ReportTile(
-            userName: controller.familyList[controller.selectedIndex].name,
+            userName:
+                controller.familyList[controller.selectedIndex.value].name,
             data: controller.data[index],
           ),
           separatorBuilder: (_, __) => const SizedBox(height: 16),
         ),
       );
-    } else if (controller.apiTupal.value.item1 == ApiStatus.SERVER_ERROR) {
+    } else if (controller.apiTuple.value.item1 == ApiStatus.SERVER_ERROR) {
       return ErrorScreen(
         onTryAgain: controller.fetchFamilyReport,
       );

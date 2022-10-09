@@ -5,8 +5,8 @@ final enUS = {
   'login_desc': 'Please enter details below to continue',
   'mob_num': 'Mobile Number',
   'request_otp': 'Request OTP',
-  'google_sign_in': 'Login with Google',
-  'login_with_facebook': 'Login with Facebook',
+  'google_sign_in': 'Google',
+  'login_with_facebook': 'Facebook',
   //OTP page
   'otp_desc': 'Enter 4 digit verification code sent to your number',
   'submit': 'Submit',
@@ -21,6 +21,8 @@ final enUS = {
 
   ///Add member
   'add_family_member': 'Add Family Member',
+  'update_family_member': 'Update Family Member',
+
   'name_req': 'Name*',
   'relation_req': 'Relation*',
   'male': 'Male',
@@ -28,8 +30,8 @@ final enUS = {
   'cancel': 'Cancel',
   'update': 'Update',
   'fill_name': 'Fill name',
-  'fill_realtion': 'Fill realtion',
-  'added_succesfully': 'Added Succesfully',
+  'fill_relation': 'Fill relation',
+  'added_successfully': 'Added Successfully',
 
   ///update profile
   'update_profile': 'Update Profile',
@@ -67,7 +69,7 @@ final enUS = {
   'report_date': 'Report Date:',
   'reminder_for_next_checkup': 'Reminder for next Checkup:',
   'finish': 'Finish',
-  'updated_succesfully': 'Updated succesfully',
+  'updated_successfully': 'Updated successfully',
   'mob_hint_with_cc': 'Mobile Number (Ex. +91 XXXXXXXXXX)',
   '': '',
 };

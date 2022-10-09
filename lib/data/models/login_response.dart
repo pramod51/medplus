@@ -80,7 +80,7 @@ class Data {
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
       name: (map['name'] ?? ''),
-      phone: (map['phone'] ?? ''),
+      phone: (map['phone']?.toString() ?? ''),
       email: (map['email'] ?? ''),
       status: (map['status'] ?? 0),
       id: (map['id'] ?? 0),

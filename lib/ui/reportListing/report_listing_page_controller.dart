@@ -7,6 +7,7 @@ import 'package:medplus/data/models/search_report.dart';
 import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/services/network/api/api_services.dart';
 import 'package:medplus/ui/base/app_page_controller.dart';
+import 'package:medplus/ui/home/home_page_controller.dart';
 
 enum SortFilter {
   latest,
@@ -15,17 +16,17 @@ enum SortFilter {
 }
 
 class ReportListingPageController extends GetxController {
-  final apiTupal = emptyTuple.obs;
-  final reportApiTupal = emptyTuple.obs;
+  final apiTuple = emptyTuple.obs;
+  final reportApiTuple = emptyTuple.obs;
   final category = Get.find<AppPreferences>().categoryList;
   final sorting = SortFilter.none.obs;
   final allData = <ReportData>[];
   final data = <ReportData>[].obs;
-  final familyList = <FamilyData>[].obs;
-  final calcelToken = CancelToken();
+  final cancelToken = CancelToken();
   final service = Get.put(ApiService());
   final allCategory = <Category>[];
-  int selectedIndex = 0;
+  final selectedIndex = 0.obs;
+  final familyList = Get.find<HomePageController>().familyList;
 
   @override
   void onReady() {
@@ -36,43 +37,48 @@ class ReportListingPageController extends GetxController {
   }
 
   void fetchFamily() async {
-    apiTupal.value = loadingTuple;
+    if (familyList.length > 1) {
+      apiTuple.value = successTuple;
+      familyList[1].isSelected = true;
+      fetchFamilyReport();
+      return;
+    }
+    apiTuple.value = loadingTuple;
     final apiResponse = await service.fetchFamily();
     if (apiResponse.success) {
       final responseData = FamilyResponse.fromMap(apiResponse.data);
       familyList.assignAll(responseData.data);
       if (familyList.isEmpty) {
-        apiTupal.value = noDataTuple;
+        apiTuple.value = noDataTuple;
         return;
       }
       familyList[0].isSelected = true;
       fetchFamilyReport();
       debugPrint('Family data Success${responseData.data}+ ');
     } else {
-      apiTupal.value = errorTuple;
+      apiTuple.value = errorTuple;
     }
   }
 
   void fetchFamilyReport() async {
-    reportApiTupal.value = loadingTuple;
+    reportApiTuple.value = loadingTuple;
     final apiResponse = await service.fetchFamilyReports(
-        familyList[selectedIndex].id, calcelToken);
+        familyList[selectedIndex.value].id, cancelToken);
     if (apiResponse.success) {
       final responseData = SearchReportResponse.fromMap(apiResponse.data);
       data.assignAll(responseData.data);
       allData.assignAll(responseData.data);
       debugPrint('Family report data Success${responseData.msg}');
-      apiTupal.value = successTuple;
-      reportApiTupal.value = successTuple;
+      apiTuple.value = successTuple;
+      reportApiTuple.value = successTuple;
     } else {
-      reportApiTupal.value = errorTuple;
+      reportApiTuple.value = errorTuple;
     }
   }
 
   void onFamilySelected(int index) {
-    selectedIndex = index;
-    familyList[familyList.indexWhere((element) => element.isSelected)]
-        .isSelected = false;
+    familyList[selectedIndex.value].isSelected = false;
+    selectedIndex.value = index;
     familyList[index].isSelected = true;
     fetchFamilyReport();
   }

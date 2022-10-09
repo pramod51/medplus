@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:medplus/data/preferences/app_preferences.dart';
 import 'package:medplus/res/assets.dart';
 import 'package:medplus/res/palette.dart';
 import 'package:medplus/ui/base/app_page.dart';
@@ -55,6 +56,9 @@ class Downloads extends AppPage {
             return const SizedBox.shrink();
           }
           final list = file.path.split('Medplus/').last.split(' ');
+          if (!list.last.endsWith('${SharedConfig.userId}.pdf')) {
+            return const SizedBox.shrink();
+          }
           if (list.length < 2) {
             return const SizedBox.shrink();
           }
