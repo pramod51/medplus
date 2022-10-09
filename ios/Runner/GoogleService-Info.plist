@@ -3,23 +3,23 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>839479048982-ttbklfaaeannhgqe58bj4pgqk2ql7vca.apps.googleusercontent.com</string>
+	<string>1053557574070-6pe6m10cpqk9a19798qmbi04hog95iot.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.839479048982-ttbklfaaeannhgqe58bj4pgqk2ql7vca</string>
+	<string>com.googleusercontent.apps.1053557574070-6pe6m10cpqk9a19798qmbi04hog95iot</string>
 	<key>ANDROID_CLIENT_ID</key>
-	<string>839479048982-1ud1aq1tlf5qe4mmop3pdbto72out88q.apps.googleusercontent.com</string>
+	<string>1053557574070-d3grqndrg8dcrv16ib3ndc8jc54rra7d.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
-	<string>AIzaSyCG3oe2rZmnxO4_dH0TEZg6yARiF0flj1E</string>
+	<string>AIzaSyCrEbeg0dTbjgd0wdScW9jFNZXSpJdUO_8</string>
 	<key>GCM_SENDER_ID</key>
-	<string>839479048982</string>
+	<string>1053557574070</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.medplus</string>
+	<string>com.medicare.medplus</string>
 	<key>PROJECT_ID</key>
-	<string>my-app-ddc5c</string>
+	<string>medplus-6ccc0</string>
 	<key>STORAGE_BUCKET</key>
-	<string>my-app-ddc5c.appspot.com</string>
+	<string>medplus-6ccc0.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,8 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:839479048982:ios:f1ec9e81e5af50ca0d6e37</string>
-	<key>DATABASE_URL</key>
-	<string>https://my-app-ddc5c.firebaseio.com</string>
+	<string>1:1053557574070:ios:11b9a6e5377730ea1a5917</string>
 </dict>
 </plist>
