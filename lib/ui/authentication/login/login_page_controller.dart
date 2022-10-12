@@ -109,10 +109,10 @@ class LoginPageController extends GetxController {
     // if (user != null) {
 
     // }
-    final googleUser = await googleSignIn.signIn();
-    if (googleUser == null) return;
     print('-------------------------------');
     try {
+      final googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return;
       final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,

@@ -148,7 +148,7 @@ class ApiService {
         '$baseUrl/api/v1/get_my_family_documents',
         makePayload({
           "user_id": SharedConfig.userId,
-          'family_id': id,
+          'family_id': id ?? 0,
         }),
         cancelToken: cancelToken);
   }

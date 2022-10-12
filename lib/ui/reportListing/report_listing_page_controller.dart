@@ -63,7 +63,7 @@ class ReportListingPageController extends GetxController {
   void fetchFamilyReport() async {
     reportApiTuple.value = loadingTuple;
     final apiResponse = await service.fetchFamilyReports(
-        familyList[selectedIndex.value].id, cancelToken);
+        familyList[selectedIndex.value].id ?? 0, cancelToken);
     if (apiResponse.success) {
       final responseData = SearchReportResponse.fromMap(apiResponse.data);
       data.assignAll(responseData.data);
